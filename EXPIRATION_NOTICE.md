@@ -9,9 +9,9 @@
 ## What Happens After Expiration?
 
 After September 11, 2025, the demo will:
-1. Display an "Demo Expired" message instead of the login screen
-2. Prevent access to the demo interface
-3. Show contact information for renewal
+1. **Automatically delete all page content**
+2. Display a blank/empty page
+3. No content will be accessible
 
 ## To Remove or Extend:
 
