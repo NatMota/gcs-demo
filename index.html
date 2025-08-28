@@ -1,16 +1,664 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" href="/permutive-gcs-demo/_next/static/media/e4af272ccee01ff0-s.p.woff2" as="font" crossorigin="" type="font/woff2"/><link rel="stylesheet" href="/permutive-gcs-demo/_next/static/css/f8dc271d55f3dc7a.css" crossorigin="" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/permutive-gcs-demo/_next/static/chunks/webpack-c930cde9941cd3a8.js" crossorigin=""/><script src="/permutive-gcs-demo/_next/static/chunks/fd9d1056-ec06e3651eb582df.js" async="" crossorigin=""></script><script src="/permutive-gcs-demo/_next/static/chunks/69-4f4721ffb5afcb34.js" async="" crossorigin=""></script><script src="/permutive-gcs-demo/_next/static/chunks/main-app-28cbc5831840f251.js" async="" crossorigin=""></script><script src="/permutive-gcs-demo/_next/static/chunks/127-bed58f3827e6737c.js" async=""></script><script src="/permutive-gcs-demo/_next/static/chunks/app/page-ee5cd2764dcd54a0.js" async=""></script><title>Permutive GCS Connectivity Demo</title><meta name="description" content="Demo application for Google Cloud Storage connectivity automation"/><meta name="next-size-adjust"/><script src="/permutive-gcs-demo/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js" crossorigin="" noModule=""></script></head><body class="__className_0dc749"><div class="min-h-screen bg-permutive-gray-50"><header class="bg-white border-b border-permutive-gray-200 sticky top-0 z-50"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex justify-between items-center py-4"><div class="flex items-center space-x-3"><div class="flex items-center space-x-2"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brain h-8 w-8 text-permutive-blue"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"></path></svg><span class="text-xl font-semibold text-permutive-gray-900">Permutive MCP</span></div><span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">AI-Powered</span></div><nav class="flex items-center space-x-6"><span class="flex items-center text-sm text-permutive-gray-600"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles h-4 w-4 mr-1 text-yellow-500"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"></path><path d="M5 3v4"></path><path d="M19 17v4"></path><path d="M3 5h4"></path><path d="M17 19h4"></path></svg>Intelligent Column Mapping</span><button class="text-permutive-gray-600 hover:text-permutive-blue"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings h-5 w-5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></nav></div></div></header><div class="bg-permutive-gray-50 border-b border-permutive-gray-200"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4"><div class="flex items-center justify-between"><div class="flex items-center"><div class="flex items-center text-permutive-blue"><div class="
-                    flex items-center justify-center w-10 h-10 rounded-full border-2 
-                    border-permutive-blue bg-permutive-blue text-white
-                  "><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield h-5 w-5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path></svg></div><span class="ml-2 font-medium text-permutive-gray-900">Authenticate</span></div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right mx-4 h-5 w-5 text-permutive-gray-300"><path d="m9 18 6-6-6-6"></path></svg></div><div class="flex items-center"><div class="flex items-center text-permutive-gray-400"><div class="
-                    flex items-center justify-center w-10 h-10 rounded-full border-2 
-                    border-permutive-gray-300 bg-white
-                  "><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-database h-5 w-5"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5V19A9 3 0 0 0 21 19V5"></path><path d="M3 12A9 3 0 0 0 21 12"></path></svg></div><span class="ml-2 font-medium text-permutive-gray-500">Select Data</span></div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right mx-4 h-5 w-5 text-permutive-gray-300"><path d="m9 18 6-6-6-6"></path></svg></div><div class="flex items-center"><div class="flex items-center text-permutive-gray-400"><div class="
-                    flex items-center justify-center w-10 h-10 rounded-full border-2 
-                    border-permutive-gray-300 bg-white
-                  "><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brain h-5 w-5"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"></path><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"></path></svg></div><span class="ml-2 font-medium text-permutive-gray-500">Map Columns</span></div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right mx-4 h-5 w-5 text-permutive-gray-300"><path d="m9 18 6-6-6-6"></path></svg></div><div class="flex items-center"><div class="flex items-center text-permutive-gray-400"><div class="
-                    flex items-center justify-center w-10 h-10 rounded-full border-2 
-                    border-permutive-gray-300 bg-white
-                  "><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle h-5 w-5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="m9 11 3 3L22 4"></path></svg></div><span class="ml-2 font-medium text-permutive-gray-500">Validate</span></div><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right mx-4 h-5 w-5 text-permutive-gray-300"><path d="m9 18 6-6-6-6"></path></svg></div><div class="flex items-center"><div class="flex items-center text-permutive-gray-400"><div class="
-                    flex items-center justify-center w-10 h-10 rounded-full border-2 
-                    border-permutive-gray-300 bg-white
-                  "><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up h-5 w-5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg></div><span class="ml-2 font-medium text-permutive-gray-500">Ingest</span></div></div></div></div></div><main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"><div class="max-w-2xl mx-auto"><div class="bg-white rounded-lg shadow-sm border border-permutive-gray-200 p-8"><div class="text-center mb-8"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield h-16 w-16 text-permutive-blue mx-auto mb-4"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"></path></svg><h2 class="text-2xl font-bold text-permutive-gray-900 mb-2">Connect to Google Cloud</h2><p class="text-permutive-gray-600">Authenticate with your Google account to access BigQuery tables</p></div><button class="w-full flex items-center justify-center px-6 py-3 bg-white border border-permutive-gray-300 rounded-lg hover:bg-permutive-gray-50 transition-colors"><svg class="h-5 w-5 mr-3" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"></path><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"></path><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"></path><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"></path></svg>Sign in with Google</button><div class="mt-6 p-4 bg-blue-50 rounded-lg"><div class="flex items-start"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info h-5 w-5 text-blue-600 mt-0.5 mr-2 flex-shrink-0"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg><div class="text-sm text-blue-900"><p class="font-medium mb-1">Required Permissions:</p><ul class="list-disc list-inside text-blue-800 space-y-1"><li>BigQuery Data Viewer</li><li>BigQuery Job User</li></ul></div></div></div></div></div></main></div><script src="/permutive-gcs-demo/_next/static/chunks/webpack-c930cde9941cd3a8.js" crossorigin="" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0]);self.__next_f.push([2,null])</script><script>self.__next_f.push([1,"1:HL[\"/permutive-gcs-demo/_next/static/media/e4af272ccee01ff0-s.p.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n2:HL[\"/permutive-gcs-demo/_next/static/css/f8dc271d55f3dc7a.css\",\"style\",{\"crossOrigin\":\"\"}]\n0:\"$L3\"\n"])</script><script>self.__next_f.push([1,"4:I[7690,[],\"\"]\n6:I[7831,[],\"\"]\n7:I[8836,[\"127\",\"static/chunks/127-bed58f3827e6737c.js\",\"931\",\"static/chunks/app/page-ee5cd2764dcd54a0.js\"],\"\"]\n8:I[5613,[],\"\"]\n9:I[1778,[],\"\"]\nb:I[8955,[],\"\"]\nc:[]\n"])</script><script>self.__next_f.push([1,"3:[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/permutive-gcs-demo/_next/static/css/f8dc271d55f3dc7a.css\",\"precedence\":\"next\",\"crossOrigin\":\"\"}]],[\"$\",\"$L4\",null,{\"buildId\":\"KZLJWJUzL4w9Tcd2D3Jwp\",\"assetPrefix\":\"/permutive-gcs-demo\",\"initialCanonicalUrl\":\"/\",\"initialTree\":[\"\",{\"children\":[\"__PAGE__\",{}]},\"$undefined\",\"$undefined\",true],\"initialSeedData\":[\"\",{\"children\":[\"__PAGE__\",{},[\"$L5\",[\"$\",\"$L6\",null,{\"propsForComponent\":{\"params\":{}},\"Component\":\"$7\",\"isStaticGeneration\":true}],null]]},[null,[\"$\",\"html\",null,{\"lang\":\"en\",\"children\":[\"$\",\"body\",null,{\"className\":\"__className_0dc749\",\"children\":[\"$\",\"div\",null,{\"className\":\"min-h-screen bg-permutive-gray-50\",\"children\":[\"$\",\"$L8\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\"],\"loading\":\"$undefined\",\"loadingStyles\":\"$undefined\",\"loadingScripts\":\"$undefined\",\"hasLoading\":false,\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L9\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":\"404\"}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],\"notFoundStyles\":[],\"styles\":null}]}]}]}],null]],\"initialHead\":[false,\"$La\"],\"globalErrorComponent\":\"$b\",\"missingSlots\":\"$Wc\"}]]\n"])</script><script>self.__next_f.push([1,"a:[[\"$\",\"meta\",\"0\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}],[\"$\",\"meta\",\"1\",{\"charSet\":\"utf-8\"}],[\"$\",\"title\",\"2\",{\"children\":\"Permutive GCS Connectivity Demo\"}],[\"$\",\"meta\",\"3\",{\"name\":\"description\",\"content\":\"Demo application for Google Cloud Storage connectivity automation\"}],[\"$\",\"meta\",\"4\",{\"name\":\"next-size-adjust\"}]]\n5:null\n"])</script><script>self.__next_f.push([1,""])</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permutive MCP - BigQuery Integration Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-2">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="text-xl font-semibold text-gray-900">Permutive MCP</span>
+                    </div>
+                    <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">
+                        AI-Powered
+                    </span>
+                </div>
+                <nav class="flex items-center space-x-6">
+                    <span class="flex items-center text-sm text-gray-600">
+                        ✨ Intelligent Column Mapping
+                    </span>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Steps -->
+    <div class="bg-gray-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center" id="step1">
+                    <div class="flex items-center text-blue-600">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-blue-600 bg-blue-600 text-white">
+                            <span class="text-sm">1</span>
+                        </div>
+                        <span class="ml-2 font-medium text-gray-900">Authenticate</span>
+                    </div>
+                </div>
+                <svg class="mx-4 h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                <div class="flex items-center" id="step2">
+                    <div class="flex items-center text-gray-400">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">
+                            <span class="text-sm">2</span>
+                        </div>
+                        <span class="ml-2 font-medium text-gray-500">Select Data</span>
+                    </div>
+                </div>
+                <svg class="mx-4 h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                <div class="flex items-center" id="step3">
+                    <div class="flex items-center text-gray-400">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">
+                            <span class="text-sm">3</span>
+                        </div>
+                        <span class="ml-2 font-medium text-gray-500">Map Columns</span>
+                    </div>
+                </div>
+                <svg class="mx-4 h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                <div class="flex items-center" id="step4">
+                    <div class="flex items-center text-gray-400">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">
+                            <span class="text-sm">4</span>
+                        </div>
+                        <span class="ml-2 font-medium text-gray-500">Validate</span>
+                    </div>
+                </div>
+                <svg class="mx-4 h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                <div class="flex items-center" id="step5">
+                    <div class="flex items-center text-gray-400">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">
+                            <span class="text-sm">5</span>
+                        </div>
+                        <span class="ml-2 font-medium text-gray-500">Ingest</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Step 1: Authentication -->
+        <div id="content-step1" class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+                <div class="text-center mb-8">
+                    <svg class="h-16 w-16 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Connect to Google Cloud</h2>
+                    <p class="text-gray-600">Authenticate with your Google account to access BigQuery tables</p>
+                </div>
+
+                <button onclick="handleLogin()" class="w-full flex items-center justify-center px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                    <svg class="h-5 w-5 mr-3" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Sign in with Google
+                </button>
+
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                    <div class="flex items-start">
+                        <svg class="h-5 w-5 text-blue-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div class="text-sm text-blue-900">
+                            <p class="font-medium mb-1">Required Permissions:</p>
+                            <ul class="list-disc list-inside text-blue-800 space-y-1">
+                                <li>BigQuery Data Viewer</li>
+                                <li>BigQuery Job User</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Table Selection -->
+        <div id="content-step2" class="hidden">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Select BigQuery Table</h2>
+                <p class="text-gray-600">Choose the table containing your audience data for ingestion into Permutive</p>
+            </div>
+
+            <div class="grid gap-4">
+                <!-- Table 1 -->
+                <button onclick="selectTable('audience_events')" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-blue-500 transition-colors text-left">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-2">
+                                <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                <h3 class="text-lg font-semibold text-gray-900">analytics_360.audience_events</h3>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                <span>📊 15.2M rows</span>
+                                <span>📅 Updated 2024-01-28</span>
+                                <span>#️⃣ 9 columns</span>
+                            </div>
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">user_id</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">timestamp</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">event_type</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">page_url</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">session_id</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded text-gray-500">+4 more</span>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Table 2 -->
+                <button onclick="selectTable('user_segments')" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-blue-500 transition-colors text-left">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-2">
+                                <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                <h3 class="text-lg font-semibold text-gray-900">cdp_exports.user_segments</h3>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                <span>📊 2.8M rows</span>
+                                <span>📅 Updated 2024-01-27</span>
+                                <span>#️⃣ 5 columns</span>
+                            </div>
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">customer_id</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">segment_codes</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">last_updated</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">interest_categories</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">lifetime_value</span>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- Table 3 -->
+                <button onclick="selectTable('content_interactions')" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-blue-500 transition-colors text-left">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-2">
+                                <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                <h3 class="text-lg font-semibold text-gray-900">web_analytics.content_interactions</h3>
+                            </div>
+                            <div class="flex items-center space-x-4 text-sm text-gray-600">
+                                <span>📊 8.5M rows</span>
+                                <span>📅 Updated 2024-01-28</span>
+                                <span>#️⃣ 5 columns</span>
+                            </div>
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">visitor_id</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">article_id</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">interaction_time</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">scroll_depth</span>
+                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">time_on_page</span>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Column Mapping -->
+        <div id="content-step3" class="hidden">
+            <div class="mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-2xl font-bold text-gray-900">Intelligent Column Mapping</h2>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm font-medium text-gray-700">MCP Confidence: <span id="confidence">0</span>%</span>
+                    </div>
+                </div>
+                <p class="text-gray-600">MCP has analyzed your table structure and suggested mappings to Permutive fields</p>
+            </div>
+
+            <!-- MCP Analysis Card -->
+            <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 mb-6 border border-purple-200">
+                <div class="flex items-start">
+                    <svg class="h-6 w-6 text-purple-600 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-purple-900 mb-2">MCP Analysis Complete</h3>
+                        <p class="text-sm text-purple-700 mb-3">
+                            Based on column naming patterns and data types, we've automatically mapped <span id="mapped-count">0</span> fields.
+                            Please review and adjust as needed.
+                        </p>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-sm text-purple-600">✓ <span id="required-mapped">0</span>/3 required fields mapped</span>
+                            <span class="text-sm text-purple-600">✓ Pattern matching applied</span>
+                            <span class="text-sm text-purple-600">✓ Similar to 89% of publisher configs</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mapping Interface -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div id="mapping-fields" class="space-y-4">
+                    <!-- Fields will be populated by JavaScript -->
+                </div>
+
+                <div class="mt-6 flex justify-between items-center">
+                    <button onclick="goToStep(2)" class="px-4 py-2 text-gray-700 hover:text-gray-900">
+                        ← Back to Tables
+                    </button>
+                    <div class="flex space-x-3">
+                        <button onclick="resetToSuggestions()" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-md hover:bg-purple-200">
+                            Reset to MCP Suggestions
+                        </button>
+                        <button onclick="validateMappings()" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Validate Mappings →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Validation & Configuration -->
+        <div id="content-step4" class="hidden">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-2">Validation & Configuration</h2>
+                <p class="text-gray-600">Review the mapping validation and configuration before starting ingestion</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Validation Results -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 class="font-semibold text-gray-900 mb-4">✅ Validation Results</h3>
+                    <div id="validation-results" class="space-y-3">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+
+                    <!-- Match Score -->
+                    <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-blue-900">Configuration Match Score</span>
+                            <span class="text-2xl font-bold text-blue-600">92%</span>
+                        </div>
+                        <p class="text-xs text-blue-700">
+                            This configuration matches patterns from 147 similar publisher integrations
+                        </p>
+                        <div class="mt-3 flex items-center space-x-2">
+                            <div class="flex-1 bg-blue-200 rounded-full h-2">
+                                <div class="bg-blue-600 rounded-full h-2" style="width: 92%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configuration Preview -->
+                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                    <h3 class="font-semibold text-gray-900 mb-4">📄 Configuration File</h3>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <span class="text-sm text-gray-600">Source:</span>
+                            <p class="font-medium" id="config-source">-</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <span class="text-sm text-gray-600">Destination:</span>
+                            <p class="font-medium">Permutive Audience Platform</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <span class="text-sm text-gray-600">Schedule:</span>
+                            <p class="font-medium">Daily at 02:00 UTC</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <span class="text-sm text-gray-600">Mapped Fields:</span>
+                            <p class="font-medium"><span id="mapped-fields-count">0</span> fields</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Historical Performance -->
+            <div class="mt-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 border border-green-200">
+                <div class="flex items-start">
+                    <svg class="h-6 w-6 text-green-600 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-green-900 mb-2">Expected Performance</h3>
+                        <p class="text-sm text-green-700 mb-3">Based on similar configurations from other publishers:</p>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <p class="text-2xl font-bold text-green-600">98.5%</p>
+                                <p class="text-xs text-green-600">Match Rate</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-green-600">2.3M</p>
+                                <p class="text-xs text-green-600">Daily Events</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-green-600">&lt;5min</p>
+                                <p class="text-xs text-green-600">Processing Time</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-8 flex justify-between items-center">
+                <button onclick="goToStep(3)" class="px-4 py-2 text-gray-700 hover:text-gray-900">
+                    ← Back to Mapping
+                </button>
+                <div class="flex space-x-3">
+                    <button class="px-6 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+                        Save as Draft
+                    </button>
+                    <button onclick="startIngestion()" class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                        👍 Approve & Start Ingestion
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Ingestion Started -->
+        <div id="content-step5" class="hidden max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+                <div class="text-center">
+                    <div class="mx-auto h-20 w-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                        <svg class="h-12 w-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Ingestion Started Successfully!</h2>
+                    <p class="text-gray-600 mb-6">Your BigQuery data is now being ingested into the Permutive Audience Platform</p>
+
+                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                        <div class="grid grid-cols-2 gap-4 text-left">
+                            <div>
+                                <p class="text-sm text-gray-600">Status</p>
+                                <p class="font-semibold text-green-600">🟢 Processing</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Records Processed</p>
+                                <p class="font-semibold"><span id="records-progress">0</span></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Estimated Time</p>
+                                <p class="font-semibold">~15 minutes</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Next Sync</p>
+                                <p class="font-semibold">Daily at 02:00 UTC</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center space-x-3">
+                        <button class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            View in Dashboard
+                        </button>
+                        <button class="px-6 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
+                            Configure Alerts
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="mt-6 bg-blue-50 rounded-lg p-6 border border-blue-200">
+                <h3 class="font-semibold text-blue-900 mb-3">Next Steps</h3>
+                <ul class="space-y-2 text-sm text-blue-800">
+                    <li>✓ Monitor ingestion progress in the Permutive Dashboard</li>
+                    <li>✓ Create audience segments once data is available</li>
+                    <li>✓ Set up activation endpoints for your segments</li>
+                    <li>✓ Configure data quality alerts and monitoring</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Global state
+        let currentStep = 1;
+        let selectedTable = null;
+        let columnMappings = {};
+        let mcpSuggestions = {};
+
+        // Mock data for tables
+        const tables = {
+            'audience_events': {
+                name: 'audience_events',
+                dataset: 'analytics_360',
+                rowCount: '15.2M',
+                columns: ['user_id', 'timestamp', 'event_type', 'page_url', 'session_id', 'device_type', 'geo_country', 'content_category', 'referrer_source']
+            },
+            'user_segments': {
+                name: 'user_segments',
+                dataset: 'cdp_exports',
+                rowCount: '2.8M',
+                columns: ['customer_id', 'segment_codes', 'last_updated', 'interest_categories', 'lifetime_value']
+            },
+            'content_interactions': {
+                name: 'content_interactions',
+                dataset: 'web_analytics',
+                rowCount: '8.5M',
+                columns: ['visitor_id', 'article_id', 'interaction_time', 'scroll_depth', 'time_on_page']
+            }
+        };
+
+        const permutiveFields = [
+            { field: 'user_id', required: true, description: 'Unique identifier for users' },
+            { field: 'timestamp', required: true, description: 'Event timestamp' },
+            { field: 'event_type', required: true, description: 'Type of event or action' },
+            { field: 'segment_codes', required: false, description: 'Comma-separated segment codes' },
+            { field: 'url', required: false, description: 'Page or content URL' },
+            { field: 'geo_info', required: false, description: 'Geographic information' },
+            { field: 'device_info', required: false, description: 'Device and browser details' }
+        ];
+
+        function handleLogin() {
+            // Simulate login
+            setTimeout(() => {
+                goToStep(2);
+            }, 1000);
+        }
+
+        function selectTable(tableName) {
+            selectedTable = tables[tableName];
+            analyzeMappings();
+            goToStep(3);
+        }
+
+        function analyzeMappings() {
+            // MCP column mapping intelligence
+            const patterns = {
+                user_id: /user.*id|customer.*id|visitor.*id|uid|userid/i,
+                timestamp: /time|timestamp|date|created|updated/i,
+                event_type: /event.*type|action|type|category/i,
+                segment_codes: /segment|codes|tags|interests/i,
+                url: /url|uri|path|page/i,
+                geo_info: /geo|country|location|region|city/i,
+                device_info: /device|browser|platform|os/i
+            };
+
+            mcpSuggestions = {};
+            selectedTable.columns.forEach(column => {
+                Object.keys(patterns).forEach(permutiveField => {
+                    if (patterns[permutiveField].test(column) && !mcpSuggestions[permutiveField]) {
+                        mcpSuggestions[permutiveField] = column;
+                    }
+                });
+            });
+
+            columnMappings = {...mcpSuggestions};
+
+            // Calculate confidence
+            const requiredFields = ['user_id', 'timestamp', 'event_type'];
+            const mappedRequired = requiredFields.filter(field => mcpSuggestions[field]).length;
+            const confidence = Math.round((mappedRequired / requiredFields.length) * 100);
+            
+            document.getElementById('confidence').textContent = confidence;
+            document.getElementById('mapped-count').textContent = Object.keys(mcpSuggestions).length;
+            document.getElementById('required-mapped').textContent = mappedRequired;
+
+            // Render mapping fields
+            renderMappingFields();
+        }
+
+        function renderMappingFields() {
+            const container = document.getElementById('mapping-fields');
+            container.innerHTML = '';
+
+            permutiveFields.forEach(field => {
+                const isMapped = columnMappings[field.field];
+                const isSuggested = mcpSuggestions[field.field];
+                
+                const fieldHtml = `
+                    <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2 mb-1">
+                                <span class="font-medium text-gray-900">${field.field}</span>
+                                ${field.required ? '<span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded">Required</span>' : ''}
+                                ${isSuggested ? '<span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">✨ MCP Suggested</span>' : ''}
+                            </div>
+                            <p class="text-sm text-gray-600">${field.description}</p>
+                        </div>
+                        <select id="mapping-${field.field}" onchange="updateMapping('${field.field}', this.value)" 
+                                class="w-64 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">-- Not mapped --</option>
+                            ${selectedTable.columns.map(col => 
+                                `<option value="${col}" ${columnMappings[field.field] === col ? 'selected' : ''}>${col}</option>`
+                            ).join('')}
+                        </select>
+                        ${isMapped ? '<span class="text-green-600">✓</span>' : ''}
+                    </div>
+                `;
+                container.innerHTML += fieldHtml;
+            });
+        }
+
+        function updateMapping(field, value) {
+            if (value) {
+                columnMappings[field] = value;
+            } else {
+                delete columnMappings[field];
+            }
+        }
+
+        function resetToSuggestions() {
+            columnMappings = {...mcpSuggestions};
+            renderMappingFields();
+        }
+
+        function validateMappings() {
+            // Update validation view
+            const validationContainer = document.getElementById('validation-results');
+            validationContainer.innerHTML = '';
+            
+            ['user_id', 'timestamp', 'event_type'].forEach(field => {
+                const status = columnMappings[field] ? 'Valid' : 'Missing';
+                const color = columnMappings[field] ? 'green' : 'red';
+                validationContainer.innerHTML += `
+                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                        <span class="font-medium text-gray-700">${field}</span>
+                        <span class="text-${color}-600">${status === 'Valid' ? '✓' : '⚠'} ${status}</span>
+                    </div>
+                `;
+            });
+
+            // Update config
+            document.getElementById('config-source').textContent = `${selectedTable.dataset}.${selectedTable.name}`;
+            document.getElementById('mapped-fields-count').textContent = Object.keys(columnMappings).length;
+
+            goToStep(4);
+        }
+
+        function startIngestion() {
+            goToStep(5);
+            // Simulate progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 1000000;
+                if (progress > 15200000) progress = 15200000;
+                document.getElementById('records-progress').textContent = `${Math.round(progress/1000000)}M / ${selectedTable.rowCount}`;
+                if (progress >= 15200000) clearInterval(interval);
+            }, 500);
+        }
+
+        function goToStep(step) {
+            currentStep = step;
+            
+            // Update progress bar
+            for (let i = 1; i <= 5; i++) {
+                const stepEl = document.getElementById(`step${i}`);
+                const contentEl = document.getElementById(`content-step${i}`);
+                
+                if (i < step) {
+                    // Completed
+                    stepEl.querySelector('div').innerHTML = `
+                        <div class="flex items-center text-blue-600">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-blue-600 bg-blue-600 text-white">
+                                ✓
+                            </div>
+                            <span class="ml-2 font-medium text-gray-900">${stepEl.querySelector('span').textContent}</span>
+                        </div>
+                    `;
+                } else if (i === step) {
+                    // Active
+                    stepEl.querySelector('div').innerHTML = `
+                        <div class="flex items-center text-blue-600">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-blue-600 bg-blue-600 text-white">
+                                <span class="text-sm">${i}</span>
+                            </div>
+                            <span class="ml-2 font-medium text-gray-900">${stepEl.querySelector('span').textContent}</span>
+                        </div>
+                    `;
+                } else {
+                    // Future
+                    stepEl.querySelector('div').innerHTML = `
+                        <div class="flex items-center text-gray-400">
+                            <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">
+                                <span class="text-sm">${i}</span>
+                            </div>
+                            <span class="ml-2 font-medium text-gray-500">${stepEl.querySelector('span').textContent}</span>
+                        </div>
+                    `;
+                }
+                
+                // Show/hide content
+                if (contentEl) {
+                    contentEl.classList.toggle('hidden', i !== step);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
