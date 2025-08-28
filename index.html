@@ -102,84 +102,6 @@
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- MCP Assistant Toggle -->
-    <div class="fixed top-4 right-4 z-50">
-        <div class="flex items-center space-x-2 bg-white rounded-lg shadow-lg px-4 py-2">
-            <span class="text-sm font-medium text-gray-700">MCP Assistant</span>
-            <button onclick="toggleMCPAssistant()" id="mcpToggle" class="relative inline-flex items-center h-6 rounded-full w-11 bg-green-500 transition-colors">
-                <span class="translate-x-6 inline-block w-4 h-4 transform bg-white rounded-full transition-transform"></span>
-            </button>
-        </div>
-    </div>
-
-    <!-- MCP Assistant Widget -->
-    <div id="mcpAssistant" class="mcp-assistant">
-        <div class="bg-white rounded-lg shadow-2xl w-80 transform transition-all" id="mcpAssistantPanel">
-            <!-- Minimized State -->
-            <button onclick="toggleMCPPanel()" id="mcpMinimized" class="hidden w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform mcp-glow">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                </svg>
-                <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-            </button>
-
-            <!-- Expanded State -->
-            <div id="mcpExpanded">
-                <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-t-lg">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-2">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                            <span class="font-semibold">MCP Assistant</span>
-                        </div>
-                        <button onclick="toggleMCPPanel()" class="text-white/80 hover:text-white">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="p-4 max-h-96 overflow-y-auto">
-                    <div id="mcpContent">
-                        <!-- Dynamic content will be inserted here -->
-                        <div class="text-sm text-gray-600">
-                            <p class="font-medium text-gray-900 mb-2">👋 Ready to accelerate your setup!</p>
-                            <p>I can help you:</p>
-                            <ul class="mt-2 space-y-1">
-                                <li class="flex items-start">
-                                    <span class="text-green-500 mr-1">✓</span>
-                                    <span>Auto-detect GCS buckets</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-green-500 mr-1">✓</span>
-                                    <span>Configure permissions automatically</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <span class="text-green-500 mr-1">✓</span>
-                                    <span>Map your schema intelligently</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Actions -->
-                <div class="border-t border-gray-200 p-3 bg-gray-50 rounded-b-lg">
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="mcpAutoDetect()" class="px-3 py-1.5 bg-blue-500 text-white text-xs rounded-lg hover:bg-blue-600 transition-colors">
-                            Auto-Detect
-                        </button>
-                        <button onclick="mcpValidateAll()" class="px-3 py-1.5 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition-colors">
-                            Validate All
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar - Permutive Style -->
         <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
@@ -387,18 +309,6 @@
                         </div>
                         
                         <div class="max-w-2xl">
-                            <!-- MCP Detection Alert -->
-                            <div id="mcpDetectionAlert" class="hidden mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                                <div class="flex items-start">
-                                    <svg class="h-5 w-5 text-green-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-medium text-green-900">MCP Auto-Detection Complete</p>
-                                        <p class="text-xs text-green-700 mt-1">Found 3 GCS buckets in project. Configuration auto-filled based on detected structure.</p>
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Connection Name -->
                             <div class="mb-6 relative">
