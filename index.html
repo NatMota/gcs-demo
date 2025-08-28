@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permutive MCP - BigQuery Integration Demo</title>
+    <title>Permutive Dashboard - GCS Connectivity</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
         .animate-spin {
             animation: spin 1s linear infinite;
         }
@@ -15,647 +15,693 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .permutive-gradient {
+            background: linear-gradient(135deg, #0066FF 0%, #004ACC 100%);
+        }
+        .sidebar-item:hover {
+            background-color: #F3F4F6;
+        }
+        .sidebar-item.active {
+            background-color: #EBF5FF;
+            border-left: 3px solid #0066FF;
+            padding-left: 21px;
+        }
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-3">
-                    <div class="flex items-center space-x-2">
-                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                        </svg>
-                        <span class="text-xl font-semibold text-gray-900">Permutive MCP</span>
-                    </div>
-                    <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">
-                        AI-Powered
-                    </span>
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar - Permutive Style -->
+        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded"></div>
+                    <span class="text-xl font-semibold text-gray-900">Permutive</span>
                 </div>
-                <nav class="flex items-center space-x-6">
-                    <span class="flex items-center text-sm text-gray-600">
-                        ✨ Intelligent Column Mapping
-                    </span>
-                </nav>
+                <p class="text-xs text-gray-500 mt-2">Audience Platform</p>
             </div>
-        </div>
-    </header>
 
-    <!-- Progress Steps -->
-    <div class="bg-gray-50 border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center" id="step1">
-                    <div class="flex items-center text-blue-600">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-blue-600 bg-blue-600 text-white">
-                            <span class="text-sm">1</span>
-                        </div>
-                        <span class="ml-2 font-medium text-gray-900">Authenticate</span>
-                    </div>
+            <!-- Navigation -->
+            <nav class="flex-1 overflow-y-auto py-4">
+                <div class="px-3 mb-4">
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">Data</p>
+                    <a href="#" class="sidebar-item flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg">
+                        <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg">
+                        <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        Audience Events
+                    </a>
                 </div>
-                <svg class="mx-4 h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-                <div class="flex items-center" id="step2">
-                    <div class="flex items-center text-gray-400">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">
-                            <span class="text-sm">2</span>
-                        </div>
-                        <span class="ml-2 font-medium text-gray-500">Select Data</span>
-                    </div>
+
+                <div class="px-3 mb-4">
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">Audiences</p>
+                    <a href="#" class="sidebar-item flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg">
+                        <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Custom Cohorts
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg">
+                        <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Modeled Cohorts
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg">
+                        <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                        </svg>
+                        Standard Cohorts
+                    </a>
                 </div>
-                <svg class="mx-4 h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-                <div class="flex items-center" id="step3">
-                    <div class="flex items-center text-gray-400">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">
-                            <span class="text-sm">3</span>
-                        </div>
-                        <span class="ml-2 font-medium text-gray-500">Map Columns</span>
-                    </div>
+
+                <div class="px-3 mb-4">
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">Activation</p>
+                    <a href="#" class="sidebar-item flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg">
+                        <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                        </svg>
+                        Cohorts Activation
+                    </a>
+                    <a href="#" class="sidebar-item active flex items-center px-3 py-2 text-sm font-medium text-blue-600 rounded-lg">
+                        <svg class="mr-3 h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                        </svg>
+                        Connections
+                        <span class="ml-auto bg-blue-100 text-blue-600 text-xs font-medium px-2 py-0.5 rounded">MCP</span>
+                    </a>
                 </div>
-                <svg class="mx-4 h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-                <div class="flex items-center" id="step4">
-                    <div class="flex items-center text-gray-400">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">
-                            <span class="text-sm">4</span>
-                        </div>
-                        <span class="ml-2 font-medium text-gray-500">Validate</span>
-                    </div>
+
+                <div class="px-3 mb-4">
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">Platform</p>
+                    <a href="#" class="sidebar-item flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg">
+                        <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                        Integrations
+                    </a>
+                    <a href="#" class="sidebar-item flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-lg">
+                        <svg class="mr-3 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                        </svg>
+                        Settings
+                    </a>
                 </div>
-                <svg class="mx-4 h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-                <div class="flex items-center" id="step5">
-                    <div class="flex items-center text-gray-400">
-                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">
-                            <span class="text-sm">5</span>
-                        </div>
-                        <span class="ml-2 font-medium text-gray-500">Ingest</span>
+            </nav>
+
+            <!-- User Menu -->
+            <div class="border-t border-gray-200 p-4">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-8 h-8 bg-gray-300 rounded-full"></div>
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <p class="text-sm font-medium text-gray-700">Publisher Demo</p>
+                        <p class="text-xs text-gray-500">demo@publisher.com</p>
                     </div>
                 </div>
             </div>
-        </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto">
+            <!-- Top Bar -->
+            <header class="bg-white border-b border-gray-200">
+                <div class="px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-2xl font-semibold text-gray-900">Connections</h1>
+                            <p class="text-sm text-gray-600 mt-1">Manage your data source connections and integrations</p>
+                        </div>
+                        <button onclick="startNewConnection()" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+                            + Add Connection
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Connection Tabs -->
+            <div class="bg-white border-b border-gray-200">
+                <div class="px-6">
+                    <nav class="flex space-x-8">
+                        <button class="py-3 px-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                            Vault Connections
+                        </button>
+                        <button class="py-3 px-1 border-b-2 border-blue-500 text-sm font-medium text-blue-600">
+                            Data Sources
+                        </button>
+                        <button class="py-3 px-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                            Identity Graph
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="p-6">
+                <!-- Existing Connections -->
+                <div id="connections-list" class="mb-8">
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <div class="p-6">
+                            <h2 class="text-lg font-semibold text-gray-900 mb-4">Active Connections</h2>
+                            
+                            <!-- Connection Card -->
+                            <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="ml-4">
+                                            <p class="text-sm font-medium text-gray-900">Google Analytics 360</p>
+                                            <p class="text-xs text-gray-500">Connected 30 days ago • Daily sync at 02:00 UTC</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="flex items-center text-xs text-green-600">
+                                            <span class="w-2 h-2 bg-green-600 rounded-full mr-1"></span>
+                                            Active
+                                        </span>
+                                        <button class="text-gray-400 hover:text-gray-600">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Add New Connection Card -->
+                            <button onclick="startNewConnection()" class="w-full border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-gray-400 transition-colors">
+                                <div class="text-center">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    <p class="mt-2 text-sm font-medium text-gray-900">Add a new connection</p>
+                                    <p class="mt-1 text-xs text-gray-500">Connect BigQuery, Snowflake, or other data sources</p>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connection Wizard (Hidden by default) -->
+                <div id="connection-wizard" class="hidden">
+                    <!-- Step Indicator -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <div id="step1-indicator" class="flex items-center">
+                                        <div class="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">1</div>
+                                        <span class="ml-2 text-sm font-medium text-gray-900">Authenticate</span>
+                                    </div>
+                                    <svg class="h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <div id="step2-indicator" class="flex items-center">
+                                        <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center text-sm font-medium">2</div>
+                                        <span class="ml-2 text-sm text-gray-500">Select Data</span>
+                                    </div>
+                                    <svg class="h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <div id="step3-indicator" class="flex items-center">
+                                        <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center text-sm font-medium">3</div>
+                                        <span class="ml-2 text-sm text-gray-500">Map Schema</span>
+                                    </div>
+                                    <svg class="h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <div id="step4-indicator" class="flex items-center">
+                                        <div class="w-8 h-8 bg-gray-200 text-gray-500 rounded-full flex items-center justify-center text-sm font-medium">4</div>
+                                        <span class="ml-2 text-sm text-gray-500">Configure</span>
+                                    </div>
+                                </div>
+                                <button onclick="closeWizard()" class="text-gray-400 hover:text-gray-600">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step Content -->
+                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                        <!-- Step 1: Select Source -->
+                        <div id="step1-content" class="p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Select Data Source</h3>
+                            
+                            <div class="grid grid-cols-3 gap-4">
+                                <button onclick="selectSource('bigquery')" class="group p-6 border-2 border-gray-200 rounded-lg hover:border-blue-500 transition-all">
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-blue-100 rounded-lg mx-auto mb-3 flex items-center justify-center group-hover:bg-blue-200">
+                                            <svg class="w-8 h-8 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                                            </svg>
+                                        </div>
+                                        <p class="font-medium text-gray-900">Google BigQuery</p>
+                                        <p class="text-xs text-gray-500 mt-1">Connect your BigQuery warehouse</p>
+                                    </div>
+                                </button>
+
+                                <button class="group p-6 border-2 border-gray-200 rounded-lg hover:border-blue-500 transition-all opacity-50 cursor-not-allowed">
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-gray-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path>
+                                            </svg>
+                                        </div>
+                                        <p class="font-medium text-gray-900">Snowflake</p>
+                                        <p class="text-xs text-gray-500 mt-1">Coming soon</p>
+                                    </div>
+                                </button>
+
+                                <button class="group p-6 border-2 border-gray-200 rounded-lg hover:border-blue-500 transition-all opacity-50 cursor-not-allowed">
+                                    <div class="text-center">
+                                        <div class="w-12 h-12 bg-gray-100 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+                                            </svg>
+                                        </div>
+                                        <p class="font-medium text-gray-900">Amazon Redshift</p>
+                                        <p class="text-xs text-gray-500 mt-1">Coming soon</p>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Authenticate -->
+                        <div id="step2-content" class="p-6 hidden">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Connect to BigQuery</h3>
+                            
+                            <div class="max-w-md mx-auto">
+                                <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+                                    <div class="flex">
+                                        <svg class="h-5 w-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <div class="ml-3">
+                                            <p class="text-sm text-blue-900 font-medium">Required Permissions</p>
+                                            <ul class="mt-1 text-xs text-blue-800 space-y-1">
+                                                <li>• BigQuery Data Viewer</li>
+                                                <li>• BigQuery Job User</li>
+                                                <li>• Project Viewer</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button onclick="authenticateGoogle()" class="w-full flex items-center justify-center px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <svg class="h-5 w-5 mr-3" viewBox="0 0 24 24">
+                                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                    </svg>
+                                    Authenticate with Google
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Select Tables -->
+                        <div id="step3-content" class="p-6 hidden">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-6">Select BigQuery Table</h3>
+                            
+                            <div class="mb-4">
+                                <div class="flex items-center justify-between p-4 bg-green-50 rounded-lg">
+                                    <div class="flex items-center">
+                                        <svg class="h-5 w-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span class="text-sm text-green-900">Connected to project: <strong>publisher-data-360</strong></span>
+                                    </div>
+                                    <span class="text-xs text-green-700">3 datasets found</span>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <div onclick="selectBigQueryTable('audience_events')" class="group cursor-pointer border border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center">
+                                                <svg class="h-5 w-5 text-gray-400 mr-2 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                                </svg>
+                                                <p class="font-medium text-gray-900">analytics_360.audience_events</p>
+                                            </div>
+                                            <div class="mt-2 flex items-center space-x-4 text-xs text-gray-500">
+                                                <span>15.2M rows</span>
+                                                <span>•</span>
+                                                <span>Last updated: 2 hours ago</span>
+                                                <span>•</span>
+                                                <span>9 columns</span>
+                                            </div>
+                                            <div class="mt-2 flex flex-wrap gap-1">
+                                                <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">user_id</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">timestamp</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">event_type</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">+6 more</span>
+                                            </div>
+                                        </div>
+                                        <svg class="h-5 w-5 text-gray-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div onclick="selectBigQueryTable('user_segments')" class="group cursor-pointer border border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center">
+                                                <svg class="h-5 w-5 text-gray-400 mr-2 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                                </svg>
+                                                <p class="font-medium text-gray-900">cdp_exports.user_segments</p>
+                                            </div>
+                                            <div class="mt-2 flex items-center space-x-4 text-xs text-gray-500">
+                                                <span>2.8M rows</span>
+                                                <span>•</span>
+                                                <span>Last updated: 1 day ago</span>
+                                                <span>•</span>
+                                                <span>5 columns</span>
+                                            </div>
+                                            <div class="mt-2 flex flex-wrap gap-1">
+                                                <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">customer_id</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">segment_codes</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">+3 more</span>
+                                            </div>
+                                        </div>
+                                        <svg class="h-5 w-5 text-gray-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div onclick="selectBigQueryTable('content_interactions')" class="group cursor-pointer border border-gray-200 rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition-all">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center">
+                                                <svg class="h-5 w-5 text-gray-400 mr-2 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                                </svg>
+                                                <p class="font-medium text-gray-900">web_analytics.content_interactions</p>
+                                            </div>
+                                            <div class="mt-2 flex items-center space-x-4 text-xs text-gray-500">
+                                                <span>8.5M rows</span>
+                                                <span>•</span>
+                                                <span>Last updated: 3 hours ago</span>
+                                                <span>•</span>
+                                                <span>5 columns</span>
+                                            </div>
+                                            <div class="mt-2 flex flex-wrap gap-1">
+                                                <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">visitor_id</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">interaction_time</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">+3 more</span>
+                                            </div>
+                                        </div>
+                                        <svg class="h-5 w-5 text-gray-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Schema Mapping -->
+                        <div id="step4-content" class="p-6 hidden">
+                            <div class="mb-6">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-lg font-semibold text-gray-900">Schema Mapping</h3>
+                                    <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded-full">
+                                        AI-Powered Suggestions
+                                    </span>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-1">Map your BigQuery columns to Permutive's data model</p>
+                            </div>
+
+                            <!-- MCP Analysis Alert -->
+                            <div class="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <svg class="h-5 w-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="ml-3 flex-1">
+                                        <p class="text-sm font-medium text-purple-900">MCP Analysis Complete</p>
+                                        <p class="text-xs text-purple-700 mt-1">
+                                            We've analyzed your schema and mapped <span id="mapped-count">7</span> fields automatically.
+                                            Confidence score: <strong>95%</strong> based on 147 similar publisher configurations.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mapping Fields -->
+                            <div class="space-y-4">
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="font-medium text-gray-900">User ID</span>
+                                                <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded">Required</span>
+                                                <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">✨ MCP Mapped</span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">Unique identifier for each user</p>
+                                        </div>
+                                        <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option selected>user_id</option>
+                                            <option>customer_id</option>
+                                            <option>visitor_id</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="font-medium text-gray-900">Event Timestamp</span>
+                                                <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded">Required</span>
+                                                <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">✨ MCP Mapped</span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">When the event occurred</p>
+                                        </div>
+                                        <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option selected>timestamp</option>
+                                            <option>event_time</option>
+                                            <option>created_at</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="font-medium text-gray-900">Event Type</span>
+                                                <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded">Required</span>
+                                                <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">✨ MCP Mapped</span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">Type of user interaction</p>
+                                        </div>
+                                        <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option selected>event_type</option>
+                                            <option>action</option>
+                                            <option>event_name</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="font-medium text-gray-900">Page URL</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">Optional</span>
+                                                <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">✨ MCP Mapped</span>
+                                            </div>
+                                            <p class="text-xs text-gray-500 mt-1">URL of the page visited</p>
+                                        </div>
+                                        <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <option selected>page_url</option>
+                                            <option>url</option>
+                                            <option>page_path</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="mt-6 flex justify-between">
+                                <button onclick="goToWizardStep(3)" class="px-4 py-2 text-gray-700 hover:text-gray-900">
+                                    ← Back
+                                </button>
+                                <div class="flex space-x-3">
+                                    <button class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200">
+                                        Reset to Suggestions
+                                    </button>
+                                    <button onclick="finalizeConnection()" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                        Finalize Connection
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Success State -->
+                        <div id="success-content" class="p-6 hidden">
+                            <div class="text-center py-8">
+                                <div class="mx-auto h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                                    <svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                                <h3 class="text-lg font-semibold text-gray-900 mb-2">Connection Established!</h3>
+                                <p class="text-sm text-gray-600 mb-6">Your BigQuery data source is now connected to Permutive</p>
+                                
+                                <div class="max-w-md mx-auto bg-gray-50 rounded-lg p-4 text-left">
+                                    <div class="space-y-3 text-sm">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Status:</span>
+                                            <span class="flex items-center text-green-600 font-medium">
+                                                <span class="w-2 h-2 bg-green-600 rounded-full mr-1 pulse-dot"></span>
+                                                Active
+                                            </span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Next sync:</span>
+                                            <span class="font-medium">In 15 minutes</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Records to process:</span>
+                                            <span class="font-medium">15.2M</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 flex justify-center space-x-3">
+                                    <button onclick="closeWizard()" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                                        View Connections
+                                    </button>
+                                    <button class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                        Create Cohort →
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Step 1: Authentication -->
-        <div id="content-step1" class="max-w-2xl mx-auto">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-                <div class="text-center mb-8">
-                    <svg class="h-16 w-16 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                    </svg>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Connect to Google Cloud</h2>
-                    <p class="text-gray-600">Authenticate with your Google account to access BigQuery tables</p>
-                </div>
-
-                <button onclick="handleLogin()" class="w-full flex items-center justify-center px-6 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                    <svg class="h-5 w-5 mr-3" viewBox="0 0 24 24">
-                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                    </svg>
-                    Sign in with Google
-                </button>
-
-                <div class="mt-6 p-4 bg-blue-50 rounded-lg">
-                    <div class="flex items-start">
-                        <svg class="h-5 w-5 text-blue-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        <div class="text-sm text-blue-900">
-                            <p class="font-medium mb-1">Required Permissions:</p>
-                            <ul class="list-disc list-inside text-blue-800 space-y-1">
-                                <li>BigQuery Data Viewer</li>
-                                <li>BigQuery Job User</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Step 2: Table Selection -->
-        <div id="content-step2" class="hidden">
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Select BigQuery Table</h2>
-                <p class="text-gray-600">Choose the table containing your audience data for ingestion into Permutive</p>
-            </div>
-
-            <div class="grid gap-4">
-                <!-- Table 1 -->
-                <button onclick="selectTable('audience_events')" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-blue-500 transition-colors text-left">
-                    <div class="flex items-start justify-between">
-                        <div class="flex-1">
-                            <div class="flex items-center mb-2">
-                                <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                                <h3 class="text-lg font-semibold text-gray-900">analytics_360.audience_events</h3>
-                            </div>
-                            <div class="flex items-center space-x-4 text-sm text-gray-600">
-                                <span>📊 15.2M rows</span>
-                                <span>📅 Updated 2024-01-28</span>
-                                <span>#️⃣ 9 columns</span>
-                            </div>
-                            <div class="mt-3 flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">user_id</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">timestamp</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">event_type</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">page_url</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">session_id</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded text-gray-500">+4 more</span>
-                            </div>
-                        </div>
-                    </div>
-                </button>
-
-                <!-- Table 2 -->
-                <button onclick="selectTable('user_segments')" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-blue-500 transition-colors text-left">
-                    <div class="flex items-start justify-between">
-                        <div class="flex-1">
-                            <div class="flex items-center mb-2">
-                                <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                                <h3 class="text-lg font-semibold text-gray-900">cdp_exports.user_segments</h3>
-                            </div>
-                            <div class="flex items-center space-x-4 text-sm text-gray-600">
-                                <span>📊 2.8M rows</span>
-                                <span>📅 Updated 2024-01-27</span>
-                                <span>#️⃣ 5 columns</span>
-                            </div>
-                            <div class="mt-3 flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">customer_id</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">segment_codes</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">last_updated</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">interest_categories</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">lifetime_value</span>
-                            </div>
-                        </div>
-                    </div>
-                </button>
-
-                <!-- Table 3 -->
-                <button onclick="selectTable('content_interactions')" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-blue-500 transition-colors text-left">
-                    <div class="flex items-start justify-between">
-                        <div class="flex-1">
-                            <div class="flex items-center mb-2">
-                                <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                                <h3 class="text-lg font-semibold text-gray-900">web_analytics.content_interactions</h3>
-                            </div>
-                            <div class="flex items-center space-x-4 text-sm text-gray-600">
-                                <span>📊 8.5M rows</span>
-                                <span>📅 Updated 2024-01-28</span>
-                                <span>#️⃣ 5 columns</span>
-                            </div>
-                            <div class="mt-3 flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">visitor_id</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">article_id</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">interaction_time</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">scroll_depth</span>
-                                <span class="px-2 py-1 bg-gray-100 text-xs rounded">time_on_page</span>
-                            </div>
-                        </div>
-                    </div>
-                </button>
-            </div>
-        </div>
-
-        <!-- Step 3: Column Mapping -->
-        <div id="content-step3" class="hidden">
-            <div class="mb-6">
-                <div class="flex items-center justify-between mb-2">
-                    <h2 class="text-2xl font-bold text-gray-900">Intelligent Column Mapping</h2>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-sm font-medium text-gray-700">MCP Confidence: <span id="confidence">0</span>%</span>
-                    </div>
-                </div>
-                <p class="text-gray-600">MCP has analyzed your table structure and suggested mappings to Permutive fields</p>
-            </div>
-
-            <!-- MCP Analysis Card -->
-            <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 mb-6 border border-purple-200">
-                <div class="flex items-start">
-                    <svg class="h-6 w-6 text-purple-600 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                    </svg>
-                    <div class="flex-1">
-                        <h3 class="font-semibold text-purple-900 mb-2">MCP Analysis Complete</h3>
-                        <p class="text-sm text-purple-700 mb-3">
-                            Based on column naming patterns and data types, we've automatically mapped <span id="mapped-count">0</span> fields.
-                            Please review and adjust as needed.
-                        </p>
-                        <div class="flex items-center space-x-4">
-                            <span class="text-sm text-purple-600">✓ <span id="required-mapped">0</span>/3 required fields mapped</span>
-                            <span class="text-sm text-purple-600">✓ Pattern matching applied</span>
-                            <span class="text-sm text-purple-600">✓ Similar to 89% of publisher configs</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mapping Interface -->
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div id="mapping-fields" class="space-y-4">
-                    <!-- Fields will be populated by JavaScript -->
-                </div>
-
-                <div class="mt-6 flex justify-between items-center">
-                    <button onclick="goToStep(2)" class="px-4 py-2 text-gray-700 hover:text-gray-900">
-                        ← Back to Tables
-                    </button>
-                    <div class="flex space-x-3">
-                        <button onclick="resetToSuggestions()" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-md hover:bg-purple-200">
-                            Reset to MCP Suggestions
-                        </button>
-                        <button onclick="validateMappings()" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                            Validate Mappings →
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Step 4: Validation & Configuration -->
-        <div id="content-step4" class="hidden">
-            <div class="mb-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-2">Validation & Configuration</h2>
-                <p class="text-gray-600">Review the mapping validation and configuration before starting ingestion</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- Validation Results -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <h3 class="font-semibold text-gray-900 mb-4">✅ Validation Results</h3>
-                    <div id="validation-results" class="space-y-3">
-                        <!-- Will be populated by JavaScript -->
-                    </div>
-
-                    <!-- Match Score -->
-                    <div class="mt-6 p-4 bg-blue-50 rounded-lg">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm font-medium text-blue-900">Configuration Match Score</span>
-                            <span class="text-2xl font-bold text-blue-600">92%</span>
-                        </div>
-                        <p class="text-xs text-blue-700">
-                            This configuration matches patterns from 147 similar publisher integrations
-                        </p>
-                        <div class="mt-3 flex items-center space-x-2">
-                            <div class="flex-1 bg-blue-200 rounded-full h-2">
-                                <div class="bg-blue-600 rounded-full h-2" style="width: 92%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Configuration Preview -->
-                <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                    <h3 class="font-semibold text-gray-900 mb-4">📄 Configuration File</h3>
-                    <div class="space-y-3">
-                        <div class="p-3 bg-gray-50 rounded-lg">
-                            <span class="text-sm text-gray-600">Source:</span>
-                            <p class="font-medium" id="config-source">-</p>
-                        </div>
-                        <div class="p-3 bg-gray-50 rounded-lg">
-                            <span class="text-sm text-gray-600">Destination:</span>
-                            <p class="font-medium">Permutive Audience Platform</p>
-                        </div>
-                        <div class="p-3 bg-gray-50 rounded-lg">
-                            <span class="text-sm text-gray-600">Schedule:</span>
-                            <p class="font-medium">Daily at 02:00 UTC</p>
-                        </div>
-                        <div class="p-3 bg-gray-50 rounded-lg">
-                            <span class="text-sm text-gray-600">Mapped Fields:</span>
-                            <p class="font-medium"><span id="mapped-fields-count">0</span> fields</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Historical Performance -->
-            <div class="mt-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 border border-green-200">
-                <div class="flex items-start">
-                    <svg class="h-6 w-6 text-green-600 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
-                    </svg>
-                    <div class="flex-1">
-                        <h3 class="font-semibold text-green-900 mb-2">Expected Performance</h3>
-                        <p class="text-sm text-green-700 mb-3">Based on similar configurations from other publishers:</p>
-                        <div class="grid grid-cols-3 gap-4">
-                            <div>
-                                <p class="text-2xl font-bold text-green-600">98.5%</p>
-                                <p class="text-xs text-green-600">Match Rate</p>
-                            </div>
-                            <div>
-                                <p class="text-2xl font-bold text-green-600">2.3M</p>
-                                <p class="text-xs text-green-600">Daily Events</p>
-                            </div>
-                            <div>
-                                <p class="text-2xl font-bold text-green-600">&lt;5min</p>
-                                <p class="text-xs text-green-600">Processing Time</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="mt-8 flex justify-between items-center">
-                <button onclick="goToStep(3)" class="px-4 py-2 text-gray-700 hover:text-gray-900">
-                    ← Back to Mapping
-                </button>
-                <div class="flex space-x-3">
-                    <button class="px-6 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
-                        Save as Draft
-                    </button>
-                    <button onclick="startIngestion()" class="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                        👍 Approve & Start Ingestion
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Step 5: Ingestion Started -->
-        <div id="content-step5" class="hidden max-w-2xl mx-auto">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-                <div class="text-center">
-                    <div class="mx-auto h-20 w-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                        <svg class="h-12 w-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                    </div>
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Ingestion Started Successfully!</h2>
-                    <p class="text-gray-600 mb-6">Your BigQuery data is now being ingested into the Permutive Audience Platform</p>
-
-                    <div class="bg-gray-50 rounded-lg p-6 mb-6">
-                        <div class="grid grid-cols-2 gap-4 text-left">
-                            <div>
-                                <p class="text-sm text-gray-600">Status</p>
-                                <p class="font-semibold text-green-600">🟢 Processing</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-600">Records Processed</p>
-                                <p class="font-semibold"><span id="records-progress">0</span></p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-600">Estimated Time</p>
-                                <p class="font-semibold">~15 minutes</p>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-600">Next Sync</p>
-                                <p class="font-semibold">Daily at 02:00 UTC</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-center space-x-3">
-                        <button class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                            View in Dashboard
-                        </button>
-                        <button class="px-6 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
-                            Configure Alerts
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Next Steps -->
-            <div class="mt-6 bg-blue-50 rounded-lg p-6 border border-blue-200">
-                <h3 class="font-semibold text-blue-900 mb-3">Next Steps</h3>
-                <ul class="space-y-2 text-sm text-blue-800">
-                    <li>✓ Monitor ingestion progress in the Permutive Dashboard</li>
-                    <li>✓ Create audience segments once data is available</li>
-                    <li>✓ Set up activation endpoints for your segments</li>
-                    <li>✓ Configure data quality alerts and monitoring</li>
-                </ul>
-            </div>
-        </div>
-    </main>
-
     <script>
-        // Global state
-        let currentStep = 1;
+        let currentStep = 0;
         let selectedTable = null;
-        let columnMappings = {};
-        let mcpSuggestions = {};
 
-        // Mock data for tables
-        const tables = {
-            'audience_events': {
-                name: 'audience_events',
-                dataset: 'analytics_360',
-                rowCount: '15.2M',
-                columns: ['user_id', 'timestamp', 'event_type', 'page_url', 'session_id', 'device_type', 'geo_country', 'content_category', 'referrer_source']
-            },
-            'user_segments': {
-                name: 'user_segments',
-                dataset: 'cdp_exports',
-                rowCount: '2.8M',
-                columns: ['customer_id', 'segment_codes', 'last_updated', 'interest_categories', 'lifetime_value']
-            },
-            'content_interactions': {
-                name: 'content_interactions',
-                dataset: 'web_analytics',
-                rowCount: '8.5M',
-                columns: ['visitor_id', 'article_id', 'interaction_time', 'scroll_depth', 'time_on_page']
+        function startNewConnection() {
+            document.getElementById('connections-list').classList.add('hidden');
+            document.getElementById('connection-wizard').classList.remove('hidden');
+            currentStep = 1;
+            showStep(1);
+        }
+
+        function closeWizard() {
+            document.getElementById('connections-list').classList.remove('hidden');
+            document.getElementById('connection-wizard').classList.add('hidden');
+        }
+
+        function selectSource(source) {
+            if (source === 'bigquery') {
+                goToWizardStep(2);
             }
-        };
+        }
 
-        const permutiveFields = [
-            { field: 'user_id', required: true, description: 'Unique identifier for users' },
-            { field: 'timestamp', required: true, description: 'Event timestamp' },
-            { field: 'event_type', required: true, description: 'Type of event or action' },
-            { field: 'segment_codes', required: false, description: 'Comma-separated segment codes' },
-            { field: 'url', required: false, description: 'Page or content URL' },
-            { field: 'geo_info', required: false, description: 'Geographic information' },
-            { field: 'device_info', required: false, description: 'Device and browser details' }
-        ];
-
-        function handleLogin() {
-            // Simulate login
+        function authenticateGoogle() {
+            // Simulate authentication
             setTimeout(() => {
-                goToStep(2);
-            }, 1000);
+                goToWizardStep(3);
+            }, 1500);
         }
 
-        function selectTable(tableName) {
-            selectedTable = tables[tableName];
-            analyzeMappings();
-            goToStep(3);
-        }
-
-        function analyzeMappings() {
-            // MCP column mapping intelligence
-            const patterns = {
-                user_id: /user.*id|customer.*id|visitor.*id|uid|userid/i,
-                timestamp: /time|timestamp|date|created|updated/i,
-                event_type: /event.*type|action|type|category/i,
-                segment_codes: /segment|codes|tags|interests/i,
-                url: /url|uri|path|page/i,
-                geo_info: /geo|country|location|region|city/i,
-                device_info: /device|browser|platform|os/i
-            };
-
-            mcpSuggestions = {};
-            selectedTable.columns.forEach(column => {
-                Object.keys(patterns).forEach(permutiveField => {
-                    if (patterns[permutiveField].test(column) && !mcpSuggestions[permutiveField]) {
-                        mcpSuggestions[permutiveField] = column;
-                    }
-                });
-            });
-
-            columnMappings = {...mcpSuggestions};
-
-            // Calculate confidence
-            const requiredFields = ['user_id', 'timestamp', 'event_type'];
-            const mappedRequired = requiredFields.filter(field => mcpSuggestions[field]).length;
-            const confidence = Math.round((mappedRequired / requiredFields.length) * 100);
-            
-            document.getElementById('confidence').textContent = confidence;
-            document.getElementById('mapped-count').textContent = Object.keys(mcpSuggestions).length;
-            document.getElementById('required-mapped').textContent = mappedRequired;
-
-            // Render mapping fields
-            renderMappingFields();
-        }
-
-        function renderMappingFields() {
-            const container = document.getElementById('mapping-fields');
-            container.innerHTML = '';
-
-            permutiveFields.forEach(field => {
-                const isMapped = columnMappings[field.field];
-                const isSuggested = mcpSuggestions[field.field];
-                
-                const fieldHtml = `
-                    <div class="flex items-center space-x-4 p-4 rounded-lg bg-gray-50">
-                        <div class="flex-1">
-                            <div class="flex items-center space-x-2 mb-1">
-                                <span class="font-medium text-gray-900">${field.field}</span>
-                                ${field.required ? '<span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded">Required</span>' : ''}
-                                ${isSuggested ? '<span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded">✨ MCP Suggested</span>' : ''}
-                            </div>
-                            <p class="text-sm text-gray-600">${field.description}</p>
-                        </div>
-                        <select id="mapping-${field.field}" onchange="updateMapping('${field.field}', this.value)" 
-                                class="w-64 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">-- Not mapped --</option>
-                            ${selectedTable.columns.map(col => 
-                                `<option value="${col}" ${columnMappings[field.field] === col ? 'selected' : ''}>${col}</option>`
-                            ).join('')}
-                        </select>
-                        ${isMapped ? '<span class="text-green-600">✓</span>' : ''}
-                    </div>
-                `;
-                container.innerHTML += fieldHtml;
-            });
-        }
-
-        function updateMapping(field, value) {
-            if (value) {
-                columnMappings[field] = value;
-            } else {
-                delete columnMappings[field];
-            }
-        }
-
-        function resetToSuggestions() {
-            columnMappings = {...mcpSuggestions};
-            renderMappingFields();
-        }
-
-        function validateMappings() {
-            // Update validation view
-            const validationContainer = document.getElementById('validation-results');
-            validationContainer.innerHTML = '';
-            
-            ['user_id', 'timestamp', 'event_type'].forEach(field => {
-                const status = columnMappings[field] ? 'Valid' : 'Missing';
-                const color = columnMappings[field] ? 'green' : 'red';
-                validationContainer.innerHTML += `
-                    <div class="flex items-center justify-between p-3 rounded-lg bg-gray-50">
-                        <span class="font-medium text-gray-700">${field}</span>
-                        <span class="text-${color}-600">${status === 'Valid' ? '✓' : '⚠'} ${status}</span>
-                    </div>
-                `;
-            });
-
-            // Update config
-            document.getElementById('config-source').textContent = `${selectedTable.dataset}.${selectedTable.name}`;
-            document.getElementById('mapped-fields-count').textContent = Object.keys(columnMappings).length;
-
-            goToStep(4);
-        }
-
-        function startIngestion() {
-            goToStep(5);
-            // Simulate progress
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.random() * 1000000;
-                if (progress > 15200000) progress = 15200000;
-                document.getElementById('records-progress').textContent = `${Math.round(progress/1000000)}M / ${selectedTable.rowCount}`;
-                if (progress >= 15200000) clearInterval(interval);
+        function selectBigQueryTable(table) {
+            selectedTable = table;
+            setTimeout(() => {
+                goToWizardStep(4);
             }, 500);
         }
 
-        function goToStep(step) {
-            currentStep = step;
+        function finalizeConnection() {
+            // Show success state
+            document.getElementById('step4-content').classList.add('hidden');
+            document.getElementById('success-content').classList.remove('hidden');
             
-            // Update progress bar
-            for (let i = 1; i <= 5; i++) {
-                const stepEl = document.getElementById(`step${i}`);
-                const contentEl = document.getElementById(`content-step${i}`);
-                
+            // Update step indicators
+            for (let i = 1; i <= 4; i++) {
+                const indicator = document.getElementById(`step${i}-indicator`);
+                indicator.querySelector('div').classList.remove('bg-gray-200', 'text-gray-500');
+                indicator.querySelector('div').classList.add('bg-green-600', 'text-white');
+                indicator.querySelector('div').innerHTML = '✓';
+                indicator.querySelector('span').classList.remove('text-gray-500');
+                indicator.querySelector('span').classList.add('text-gray-900');
+            }
+        }
+
+        function goToWizardStep(step) {
+            currentStep = step;
+            showStep(step);
+        }
+
+        function showStep(step) {
+            // Hide all steps
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`step${i}-content`).classList.add('hidden');
+            }
+            
+            // Show current step
+            document.getElementById(`step${step}-content`).classList.remove('hidden');
+            
+            // Update indicators
+            for (let i = 1; i <= 4; i++) {
+                const indicator = document.getElementById(`step${i}-indicator`);
                 if (i < step) {
                     // Completed
-                    stepEl.querySelector('div').innerHTML = `
-                        <div class="flex items-center text-blue-600">
-                            <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-blue-600 bg-blue-600 text-white">
-                                ✓
-                            </div>
-                            <span class="ml-2 font-medium text-gray-900">${stepEl.querySelector('span').textContent}</span>
-                        </div>
-                    `;
+                    indicator.querySelector('div').classList.remove('bg-gray-200', 'text-gray-500');
+                    indicator.querySelector('div').classList.add('bg-green-600', 'text-white');
+                    indicator.querySelector('div').innerHTML = '✓';
+                    indicator.querySelector('span').classList.remove('text-gray-500');
+                    indicator.querySelector('span').classList.add('text-gray-900');
                 } else if (i === step) {
                     // Active
-                    stepEl.querySelector('div').innerHTML = `
-                        <div class="flex items-center text-blue-600">
-                            <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-blue-600 bg-blue-600 text-white">
-                                <span class="text-sm">${i}</span>
-                            </div>
-                            <span class="ml-2 font-medium text-gray-900">${stepEl.querySelector('span').textContent}</span>
-                        </div>
-                    `;
+                    indicator.querySelector('div').classList.remove('bg-gray-200', 'text-gray-500');
+                    indicator.querySelector('div').classList.add('bg-blue-600', 'text-white');
+                    indicator.querySelector('div').innerHTML = i;
+                    indicator.querySelector('span').classList.remove('text-gray-500');
+                    indicator.querySelector('span').classList.add('text-gray-900');
                 } else {
                     // Future
-                    stepEl.querySelector('div').innerHTML = `
-                        <div class="flex items-center text-gray-400">
-                            <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-300 bg-white">
-                                <span class="text-sm">${i}</span>
-                            </div>
-                            <span class="ml-2 font-medium text-gray-500">${stepEl.querySelector('span').textContent}</span>
-                        </div>
-                    `;
-                }
-                
-                // Show/hide content
-                if (contentEl) {
-                    contentEl.classList.toggle('hidden', i !== step);
+                    indicator.querySelector('div').classList.add('bg-gray-200', 'text-gray-500');
+                    indicator.querySelector('div').classList.remove('bg-blue-600', 'bg-green-600', 'text-white');
+                    indicator.querySelector('div').innerHTML = i;
+                    indicator.querySelector('span').classList.add('text-gray-500');
+                    indicator.querySelector('span').classList.remove('text-gray-900');
                 }
             }
         }
