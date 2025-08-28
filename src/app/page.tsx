@@ -231,6 +231,19 @@ export default function Home() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [passwordError, setPasswordError] = useState(false);
+  const [isExpired, setIsExpired] = useState(false);
+  
+  // Check expiration on mount
+  useEffect(() => {
+    const deploymentDate = new Date('2025-08-28'); // Today's date
+    const expirationDate = new Date(deploymentDate);
+    expirationDate.setDate(expirationDate.getDate() + 14); // Add 14 days
+    
+    const today = new Date();
+    if (today > expirationDate) {
+      setIsExpired(true);
+    }
+  }, []);
   
   // Application state
   const [currentStep, setCurrentStep] = useState(0);
@@ -435,6 +448,35 @@ export default function Home() {
   };
 
   // Show login screen if not authenticated
+  if (isExpired) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 text-center">
+            <div className="flex justify-center mb-6">
+              <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">
+                <AlertCircle className="h-8 w-8 text-gray-600" />
+              </div>
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Demo Expired</h1>
+            <p className="text-gray-600 mb-6">
+              This demo was available for 14 days and has now expired.
+            </p>
+            <p className="text-sm text-gray-500">
+              Deployment Date: August 28, 2025<br />
+              Expiration Date: September 11, 2025
+            </p>
+            <div className="mt-8 pt-6 border-t border-gray-200">
+              <p className="text-xs text-gray-400">
+                Contact administrator for access renewal
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
