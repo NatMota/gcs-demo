@@ -422,8 +422,8 @@ export default function Home() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Hash of "permutive" = 687142121
-    const correctPasswordHash = 687142121;
+    // Hash of "permutive" = -1917249821
+    const correctPasswordHash = -1917249821;
     
     if (hashPassword(passwordInput) === correctPasswordHash) {
       setIsAuthenticated(true);
@@ -443,12 +443,10 @@ export default function Home() {
             {/* Logo */}
             <div className="flex justify-center mb-8">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-                  <Database className="h-6 w-6 text-white" />
-                </div>
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg"></div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Product Demo</h1>
-                  <p className="text-xs text-gray-500">Data Connectivity Platform</p>
+                  <h1 className="text-2xl font-bold text-gray-900">Permutive</h1>
+                  <p className="text-xs text-gray-500">Data Connectivity Demo</p>
                 </div>
               </div>
             </div>
@@ -493,10 +491,10 @@ export default function Home() {
             {/* Footer */}
             <div className="mt-8 pt-6 border-t border-gray-200">
               <p className="text-xs text-center text-gray-500">
-                Enter your access credentials to continue
+                Protected demonstration environment
               </p>
               <p className="text-xs text-center text-gray-400 mt-1">
-                Contact administrator for access
+                Hint: The password is the company name in lowercase
               </p>
             </div>
           </div>
@@ -512,7 +510,7 @@ export default function Home() {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
             <Square className="h-4 w-4 text-gray-400" />
-            <span className="text-sm font-medium text-gray-200">GCS Data Integration</span>
+            <span className="text-sm font-medium text-gray-200">Permutive GCS Integration</span>
           </div>
         </div>
 

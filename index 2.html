@@ -191,7 +191,10 @@
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Available Catalogs</h2>
                         <div class="grid grid-cols-3 gap-4">
                             <!-- Google Cloud Storage (Primary) -->
-                            <button onclick="selectCatalogSource('gcs')" class="bg-white rounded-lg border-2 border-blue-500 p-4 hover:shadow-lg transition-all text-left ring-2 ring-blue-100">
+                            <button onclick="selectCatalogSource('gcs')" class="bg-white rounded-lg border-2 border-blue-500 p-4 hover:shadow-lg transition-all text-left relative ring-2 ring-blue-100">
+                                <div class="absolute top-2 right-2">
+                                    <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">Recommended</span>
+                                </div>
                                 <div class="flex items-start">
                                     <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                                         <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
@@ -236,7 +239,10 @@
                             </button>
                             
                             <!-- AI Wizard (formerly MCP Enhanced) -->
-                            <button onclick="selectCatalogSource('mcp')" class="bg-white rounded-lg border border-gray-200 p-4 hover:border-green-500 hover:shadow-sm transition-all text-left">
+                            <button onclick="selectCatalogSource('mcp')" class="bg-white rounded-lg border border-gray-200 p-4 hover:border-green-500 hover:shadow-sm transition-all text-left relative">
+                                <div class="absolute top-2 right-2">
+                                    <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">AI Powered</span>
+                                </div>
                                 <div class="flex items-start">
                                     <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-3">
                                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1125,469 +1131,6 @@
         }
         
         function showMCPQuickSetup() {
-            // Show AI conversation modal first
-            showAIConversationModal();
-        }
-        
-        function showAIConversationModal() {
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
-            modal.id = 'aiConversationModal';
-            modal.innerHTML = `
-                <div class="bg-white rounded-lg shadow-2xl max-w-4xl w-full mx-4" id="aiWizardContent">
-                    <!-- Step 1: Choose Connection Type -->
-                    <div id="aiStep1" class="block">
-                        <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-t-lg">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                                    </svg>
-                                    <div>
-                                        <h2 class="text-xl font-semibold">AI Configuration Wizard</h2>
-                                        <p class="text-green-100 text-sm">Step 1: Select your data source</p>
-                                    </div>
-                                </div>
-                                <button onclick="closeAIConversation()" class="text-white/80 hover:text-white">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="p-6">
-                            <p class="text-gray-600 mb-6">What type of data would you like to connect to Permutive?</p>
-                            
-                            <div class="grid grid-cols-2 gap-4">
-                                <button onclick="selectDataType('ga4')" class="group bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-green-500 hover:shadow-lg transition-all text-left">
-                                    <div class="flex items-start space-x-3">
-                                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                                            <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                            </svg>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="font-semibold text-gray-900">GA4 BigQuery Export</h3>
-                                            <p class="text-sm text-gray-600 mt-1">Connect Google Analytics 4 data exported to BigQuery</p>
-                                            <div class="mt-3 flex flex-wrap gap-2">
-                                                <span class="text-xs px-2 py-1 bg-blue-50 text-blue-700 rounded">Recommended</span>
-                                                <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">Auto-detect</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-                                
-                                <button onclick="selectDataType('custom')" class="group bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-green-500 hover:shadow-lg transition-all text-left">
-                                    <div class="flex items-start space-x-3">
-                                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center group-hover:bg-purple-200 transition-colors">
-                                            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="font-semibold text-gray-900">Custom Data Pipeline</h3>
-                                            <p class="text-sm text-gray-600 mt-1">Connect your own data format from GCS</p>
-                                            <div class="mt-3 flex flex-wrap gap-2">
-                                                <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">Flexible</span>
-                                                <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">Any format</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-                                
-                                <button onclick="selectDataType('detect')" class="group bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-green-500 hover:shadow-lg transition-all text-left">
-                                    <div class="flex items-start space-x-3">
-                                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                                            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="font-semibold text-gray-900">Auto-Detect</h3>
-                                            <p class="text-sm text-gray-600 mt-1">Let AI scan and detect your GCS buckets</p>
-                                            <div class="mt-3 flex flex-wrap gap-2">
-                                                <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">Smart scan</span>
-                                                <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">Automatic</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-                                
-                                <button onclick="selectDataType('manual')" class="group bg-white border-2 border-gray-200 rounded-lg p-6 hover:border-gray-400 hover:shadow-lg transition-all text-left">
-                                    <div class="flex items-start space-x-3">
-                                        <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center group-hover:bg-gray-200 transition-colors">
-                                            <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-                                            </svg>
-                                        </div>
-                                        <div class="flex-1">
-                                            <h3 class="font-semibold text-gray-900">Manual Setup</h3>
-                                            <p class="text-sm text-gray-600 mt-1">Configure all settings manually</p>
-                                            <div class="mt-3 flex flex-wrap gap-2">
-                                                <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">Full control</span>
-                                                <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">Advanced</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </button>
-                            </div>
-                            
-                            <div class="mt-6 flex justify-end">
-                                <button onclick="showTemplatesFallback()" class="text-sm text-gray-600 hover:text-gray-800">
-                                    Skip wizard →
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Step 2: Google Authentication -->
-                    <div id="aiStep2" class="hidden">
-                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-t-lg">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                                    </svg>
-                                    <div>
-                                        <h2 class="text-xl font-semibold">Connect to Google Cloud</h2>
-                                        <p class="text-blue-100 text-sm">Step 2: Authenticate with Google</p>
-                                    </div>
-                                </div>
-                                <button onclick="closeAIConversation()" class="text-white/80 hover:text-white">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="p-6">
-                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                                <div class="flex items-start">
-                                    <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-medium text-blue-900">We need to access your Google Cloud Platform account</p>
-                                        <p class="text-sm text-blue-700 mt-1">This allows us to detect and configure your GCS buckets automatically.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <h3 class="font-medium text-gray-900">Required permissions:</h3>
-                                
-                                <div class="space-y-3">
-                                    <div class="flex items-start">
-                                        <svg class="w-5 h-5 text-green-500 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <div class="flex-1">
-                                            <p class="text-sm font-medium text-gray-900">Storage Object Viewer</p>
-                                            <p class="text-xs text-gray-600">Read access to detect and scan your GCS buckets</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex items-start">
-                                        <svg class="w-5 h-5 text-green-500 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <div class="flex-1">
-                                            <p class="text-sm font-medium text-gray-900">Project Viewer</p>
-                                            <p class="text-xs text-gray-600">View project metadata and resource information</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex items-start">
-                                        <svg class="w-5 h-5 text-green-500 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        <div class="flex-1">
-                                            <p class="text-sm font-medium text-gray-900">IAM Policy Reader</p>
-                                            <p class="text-xs text-gray-600">Verify permission configuration for connection@permutive.com</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-8 flex items-center justify-between">
-                                <button onclick="backToStep1()" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                                    ← Back
-                                </button>
-                                
-                                <button onclick="triggerGoogleLogin()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                    </svg>
-                                    <span>Continue with Google</span>
-                                </button>
-                            </div>
-                            
-                            <p class="text-xs text-gray-500 text-center mt-4">
-                                You will be redirected to Google to grant permissions. This is secure and we don't store your credentials.
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- Step 3: Configuration Review -->
-                    <div id="aiStep3" class="hidden">
-                        <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-t-lg">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    <div>
-                                        <h2 class="text-xl font-semibold">Configure Your Connection</h2>
-                                        <p class="text-green-100 text-sm">Step 3: Select bucket and confirm settings</p>
-                                    </div>
-                                </div>
-                                <button onclick="closeAIConversation()" class="text-white/80 hover:text-white">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="p-6">
-                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                                <div class="flex items-start">
-                                    <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-medium text-blue-900">Found 3 buckets in your project</p>
-                                        <p class="text-sm text-blue-700 mt-1">Select the bucket containing your data and we'll detect the schema automatically.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <!-- Bucket Selection -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                                        Select GCS Bucket <span class="text-red-500">*</span>
-                                    </label>
-                                    <select id="bucketSelect" onchange="detectSchemaForBucket()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                                        <option value="">Choose a bucket...</option>
-                                        <option value="analytics-export-data">analytics-export-data (GA4 Export)</option>
-                                        <option value="web-events-export">web-events-export (Custom Events)</option>
-                                        <option value="customer-data-platform">customer-data-platform (CDP Data)</option>
-                                    </select>
-                                    <p class="mt-1 text-xs text-gray-500">We detected these buckets in project: publisher-data-platform</p>
-                                </div>
-                                
-                                <!-- Schema Detection Result -->
-                                <div id="schemaDetection" class="hidden">
-                                    <div class="bg-gray-50 rounded-lg p-4 space-y-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                                Detected Schema Prefix
-                                            </label>
-                                            <div class="flex items-start space-x-2">
-                                                <input type="text" 
-                                                    id="detectedSchema" 
-                                                    value="analytics_123456/events"
-                                                    class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-mono text-sm"
-                                                    placeholder="e.g., analytics_123456/events">
-                                                <button onclick="explainSchema()" class="px-3 py-2 text-blue-600 hover:text-blue-700">
-                                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                            <div id="schemaExplanation" class="hidden mt-2 p-3 bg-blue-50 rounded-lg text-xs text-blue-800">
-                                                <p class="font-medium mb-1">What is a schema prefix?</p>
-                                                <p>The schema prefix is the path pattern within your bucket that represents a logical table or dataset. For example:</p>
-                                                <ul class="mt-2 space-y-1 ml-4">
-                                                    <li>• GA4: <code class="bg-blue-100 px-1">analytics_PROPERTY_ID/events_*</code></li>
-                                                    <li>• Custom: <code class="bg-blue-100 px-1">dataset_name/table_name/*</code></li>
-                                                    <li>• Hourly data: <code class="bg-blue-100 px-1">data/hourly/events_*</code></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        
-                                        <div>
-                                            <p class="text-sm font-medium text-gray-700 mb-2">Sample files found:</p>
-                                            <div class="bg-white border border-gray-200 rounded p-2 max-h-32 overflow-y-auto">
-                                                <code class="text-xs text-gray-600" id="sampleFiles">
-                                                    analytics_123456/events_20240115/<br>
-                                                    analytics_123456/events_20240116/<br>
-                                                    analytics_123456/events_20240117/<br>
-                                                    analytics_123456/events_intraday_20240118/
-                                                </code>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="grid grid-cols-2 gap-4">
-                                            <div>
-                                                <p class="text-sm font-medium text-gray-700 mb-1">Data Format</p>
-                                                <p class="text-sm text-gray-900">Parquet (ZSTD compression)</p>
-                                            </div>
-                                            <div>
-                                                <p class="text-sm font-medium text-gray-700 mb-1">Partitioning</p>
-                                                <p class="text-sm text-gray-900">Hive-style (date-based)</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-6 flex items-center justify-between">
-                                <button onclick="backToStep2()" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                                    ← Back
-                                </button>
-                                
-                                <div class="flex items-center space-x-3">
-                                    <button onclick="modifyConfiguration()" class="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                                        Modify
-                                    </button>
-                                    <button onclick="applyGA4Config()" class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                                        Apply Configuration →
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-        
-        function closeAIConversation() {
-            const modal = document.getElementById('aiConversationModal');
-            if (modal) modal.remove();
-        }
-        
-        function selectDataType(type) {
-            if (type === 'ga4' || type === 'detect' || type === 'custom') {
-                // Show Google auth step
-                document.getElementById('aiStep1').classList.add('hidden');
-                document.getElementById('aiStep2').classList.remove('hidden');
-            } else if (type === 'manual') {
-                closeAIConversation();
-                selectCatalogSource('gcs');
-            }
-        }
-        
-        function backToStep1() {
-            document.getElementById('aiStep2').classList.add('hidden');
-            document.getElementById('aiStep1').classList.remove('hidden');
-        }
-        
-        function backToStep2() {
-            document.getElementById('aiStep3').classList.add('hidden');
-            document.getElementById('aiStep2').classList.remove('hidden');
-        }
-        
-        function triggerGoogleLogin() {
-            // Simulate Google OAuth
-            alert('Redirecting to Google for authentication...\n\nIn production, this would:\n1. Redirect to Google OAuth\n2. Request the specified permissions\n3. Return with access token');
-            
-            // Simulate successful auth and show configuration
-            setTimeout(() => {
-                document.getElementById('aiStep2').classList.add('hidden');
-                document.getElementById('aiStep3').classList.remove('hidden');
-            }, 500);
-        }
-        
-        function modifyConfiguration() {
-            closeAIConversation();
-            selectCatalogSource('gcs');
-            setTimeout(() => {
-                document.getElementById('connectionName').value = 'GA4 BigQuery Export';
-                document.getElementById('gcpProjectId').value = 'publisher-data-platform';
-                document.getElementById('bucketName').value = 'analytics-export-data';
-                document.getElementById('schemaPrefix').value = 'analytics_123456/events';
-                document.getElementById('dataFormat').value = 'parquet';
-                document.getElementById('dataPartitioning').value = 'all';
-                validateAllFields();
-            }, 500);
-        }
-        
-        function detectSchemaForBucket() {
-            const bucket = document.getElementById('bucketSelect').value;
-            if (!bucket) {
-                document.getElementById('schemaDetection').classList.add('hidden');
-                return;
-            }
-            
-            // Show detection area
-            document.getElementById('schemaDetection').classList.remove('hidden');
-            
-            // Update schema and sample files based on bucket selection
-            const schemas = {
-                'analytics-export-data': {
-                    schema: 'analytics_123456/events',
-                    files: `analytics_123456/events_20240115/<br>
-                           analytics_123456/events_20240116/<br>
-                           analytics_123456/events_20240117/<br>
-                           analytics_123456/events_intraday_20240118/`,
-                    format: 'Parquet (ZSTD compression)',
-                    partitioning: 'Hive-style (date=YYYY-MM-DD)'
-                },
-                'web-events-export': {
-                    schema: 'events/hourly',
-                    files: `events/hourly/2024/01/15/00/<br>
-                           events/hourly/2024/01/15/01/<br>
-                           events/hourly/2024/01/15/02/<br>
-                           events/hourly/2024/01/15/03/`,
-                    format: 'JSON (GZIP compression)',
-                    partitioning: 'Hive-style (year/month/day/hour)'
-                },
-                'customer-data-platform': {
-                    schema: 'customers/profiles',
-                    files: `customers/profiles/batch_20240115/<br>
-                           customers/profiles/batch_20240116/<br>
-                           customers/profiles/batch_20240117/<br>
-                           customers/profiles/batch_20240118/`,
-                    format: 'CSV (uncompressed)',
-                    partitioning: 'Daily batches'
-                }
-            };
-            
-            const selected = schemas[bucket];
-            document.getElementById('detectedSchema').value = selected.schema;
-            document.getElementById('sampleFiles').innerHTML = selected.files;
-            
-            // Update format and partitioning display
-            const formatDiv = document.querySelector('#schemaDetection .grid div:first-child p:last-child');
-            const partitionDiv = document.querySelector('#schemaDetection .grid div:last-child p:last-child');
-            if (formatDiv) formatDiv.textContent = selected.format;
-            if (partitionDiv) partitionDiv.textContent = selected.partitioning;
-        }
-        
-        function explainSchema() {
-            const explanation = document.getElementById('schemaExplanation');
-            explanation.classList.toggle('hidden');
-        }
-        
-        function applyGA4Config() {
-            closeAIConversation();
-            selectCatalogSource('gcs');
-            setTimeout(() => {
-                document.getElementById('connectionName').value = 'GA4 BigQuery Export';
-                document.getElementById('gcpProjectId').value = 'publisher-data-platform';
-                document.getElementById('bucketName').value = 'analytics-export-data';
-                document.getElementById('schemaPrefix').value = 'analytics_123456/events';
-                document.getElementById('dataFormat').value = 'parquet';
-                document.getElementById('dataPartitioning').value = 'all';
-                validateAllFields();
-            }, 500);
-        }
-        
-        function showTemplatesFallback() {
-            closeAIConversation();
-            showTemplatesModal();
-        }
-        
-        function showTemplatesModal() {
             const modal = document.createElement('div');
             modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
             modal.id = 'mcpQuickSetupModal';
@@ -1600,8 +1143,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
                                 <div>
-                                    <h2 class="text-xl font-semibold">Quick Setup Templates</h2>
-                                    <p class="text-green-100 text-sm">Pre-configured templates for common use cases</p>
+                                    <h2 class="text-xl font-semibold">MCP Quick Setup</h2>
+                                    <p class="text-green-100 text-sm">AI-powered configuration templates</p>
                                 </div>
                             </div>
                             <button onclick="closeMCPQuickSetup()" class="text-white/80 hover:text-white">
@@ -1634,45 +1177,39 @@
                                 </div>
                             </button>
                             
-                            <button disabled class="w-full bg-gray-50 border border-gray-200 rounded-lg p-4 opacity-50 cursor-not-allowed text-left relative">
-                                <div class="absolute top-2 right-2">
-                                    <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-xs rounded-full font-medium">Coming Soon</span>
-                                </div>
+                            <button onclick="useTemplate('adobe')" class="w-full bg-white border border-gray-200 rounded-lg p-4 hover:border-green-500 hover:bg-green-50 transition-all text-left group">
                                 <div class="flex items-start">
-                                    <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
-                                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                    <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-red-200 transition-colors">
+                                        <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M14.58 3l.01 7.98L22.57 11l-7.99.02L14.58 3zm-5.17 5.17L2 15.58l7.43-.01-.01-7.41 .01.01zm5.18 5.19l-.01 7.43 7.43-7.42-7.43-.02.01.01zM9.42 13.4l-7.43.01 7.42 7.43.01-7.43V13.4z"/>
                                         </svg>
                                     </div>
                                     <div class="flex-1">
-                                        <h3 class="font-semibold text-gray-500">Adobe Analytics Data Feed</h3>
-                                        <p class="text-sm text-gray-400 mt-1">Configured for Adobe Analytics data feeds with visitor-based structure</p>
+                                        <h3 class="font-semibold text-gray-900">Adobe Analytics Data Feed</h3>
+                                        <p class="text-sm text-gray-600 mt-1">Configured for Adobe Analytics data feeds with visitor-based structure</p>
                                         <div class="mt-2 flex flex-wrap gap-2">
-                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-400 rounded">CSV format</span>
-                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-400 rounded">Hourly partitions</span>
-                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-400 rounded">Visitor schema</span>
+                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">CSV format</span>
+                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">Hourly partitions</span>
+                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">Visitor schema</span>
                                         </div>
                                     </div>
                                 </div>
                             </button>
                             
-                            <button disabled class="w-full bg-gray-50 border border-gray-200 rounded-lg p-4 opacity-50 cursor-not-allowed text-left relative">
-                                <div class="absolute top-2 right-2">
-                                    <span class="px-2 py-0.5 bg-gray-100 text-gray-500 text-xs rounded-full font-medium">Coming Soon</span>
-                                </div>
+                            <button onclick="useTemplate('custom')" class="w-full bg-white border border-gray-200 rounded-lg p-4 hover:border-green-500 hover:bg-green-50 transition-all text-left group">
                                 <div class="flex items-start">
-                                    <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
-                                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3 group-hover:bg-purple-200 transition-colors">
+                                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
                                         </svg>
                                     </div>
                                     <div class="flex-1">
-                                        <h3 class="font-semibold text-gray-500">Custom Events Pipeline</h3>
-                                        <p class="text-sm text-gray-400 mt-1">Flexible configuration for custom event streaming pipelines</p>
+                                        <h3 class="font-semibold text-gray-900">Custom Events Pipeline</h3>
+                                        <p class="text-sm text-gray-600 mt-1">Flexible configuration for custom event streaming pipelines</p>
                                         <div class="mt-2 flex flex-wrap gap-2">
-                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-400 rounded">JSON format</span>
-                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-400 rounded">Custom partitions</span>
-                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-400 rounded">Flexible schema</span>
+                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">JSON format</span>
+                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">Custom partitions</span>
+                                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">Flexible schema</span>
                                         </div>
                                     </div>
                                 </div>
