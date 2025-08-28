@@ -2,7 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   output: 'export',
-  basePath: process.env.NODE_ENV === 'production' ? '/permutive-gcs-demo' : '',
+  basePath: '/permutive-gcs-demo',
+  assetPrefix: '/permutive-gcs-demo/',
   images: {
     unoptimized: true
   }
