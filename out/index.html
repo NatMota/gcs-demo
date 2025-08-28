@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permutive Dashboard - GCS Connectivity</title>
+    <title>Permutive Dashboard - GCS Connectivity with MCP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -15,8 +15,18 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .7; }
+        }
         .permutive-gradient {
             background: linear-gradient(135deg, #0066FF 0%, #004ACC 100%);
+        }
+        .mcp-gradient {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
         }
         .sidebar-item:hover {
             background-color: #F3F4F6;
@@ -43,9 +53,133 @@
             font-family: 'Courier New', monospace;
             line-height: 1.5;
         }
+        .mcp-assistant {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+        }
+        .mcp-suggestion {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(10px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .confidence-high { background-color: #10B981; }
+        .confidence-medium { background-color: #F59E0B; }
+        .confidence-low { background-color: #EF4444; }
+        .mcp-glow {
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1), 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+        .typing-indicator {
+            display: inline-flex;
+            align-items: center;
+        }
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background-color: #10B981;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1.4s infinite;
+        }
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- MCP Assistant Toggle -->
+    <div class="fixed top-4 right-4 z-50">
+        <div class="flex items-center space-x-2 bg-white rounded-lg shadow-lg px-4 py-2">
+            <span class="text-sm font-medium text-gray-700">MCP Assistant</span>
+            <button onclick="toggleMCPAssistant()" id="mcpToggle" class="relative inline-flex items-center h-6 rounded-full w-11 bg-green-500 transition-colors">
+                <span class="translate-x-6 inline-block w-4 h-4 transform bg-white rounded-full transition-transform"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MCP Assistant Widget -->
+    <div id="mcpAssistant" class="mcp-assistant">
+        <div class="bg-white rounded-lg shadow-2xl w-80 transform transition-all" id="mcpAssistantPanel">
+            <!-- Minimized State -->
+            <button onclick="toggleMCPPanel()" id="mcpMinimized" class="hidden w-14 h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition-transform mcp-glow">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+            </button>
+
+            <!-- Expanded State -->
+            <div id="mcpExpanded">
+                <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-4 rounded-t-lg">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="font-semibold">MCP Assistant</span>
+                        </div>
+                        <button onclick="toggleMCPPanel()" class="text-white/80 hover:text-white">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-4 max-h-96 overflow-y-auto">
+                    <div id="mcpContent">
+                        <!-- Dynamic content will be inserted here -->
+                        <div class="text-sm text-gray-600">
+                            <p class="font-medium text-gray-900 mb-2">👋 Ready to accelerate your setup!</p>
+                            <p>I can help you:</p>
+                            <ul class="mt-2 space-y-1">
+                                <li class="flex items-start">
+                                    <span class="text-green-500 mr-1">✓</span>
+                                    <span>Auto-detect GCS buckets</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-500 mr-1">✓</span>
+                                    <span>Configure permissions automatically</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-500 mr-1">✓</span>
+                                    <span>Map your schema intelligently</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="border-t border-gray-200 p-3 bg-gray-50 rounded-b-lg">
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="mcpAutoDetect()" class="px-3 py-1.5 bg-blue-500 text-white text-xs rounded-lg hover:bg-blue-600 transition-colors">
+                            Auto-Detect
+                        </button>
+                        <button onclick="mcpValidateAll()" class="px-3 py-1.5 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition-colors">
+                            Validate All
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="flex h-screen overflow-hidden">
         <!-- Sidebar - Permutive Style -->
         <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
@@ -106,6 +240,30 @@
             <div class="p-6">
                 <!-- Existing Connections -->
                 <div id="connectionsView">
+                    <!-- Quick Setup Templates -->
+                    <div class="mb-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4 border border-green-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h3 class="text-sm font-semibold text-gray-900 flex items-center">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+                                    MCP Quick Setup Available
+                                </h3>
+                                <p class="text-xs text-gray-600 mt-1">Use AI-powered templates for faster configuration</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="useTemplate('ga4')" class="px-3 py-1.5 bg-white text-xs font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors border border-gray-200">
+                                    GA4 BigQuery
+                                </button>
+                                <button onclick="useTemplate('adobe')" class="px-3 py-1.5 bg-white text-xs font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors border border-gray-200">
+                                    Adobe Analytics
+                                </button>
+                                <button onclick="useTemplate('custom')" class="px-3 py-1.5 bg-white text-xs font-medium text-gray-700 rounded-lg hover:bg-gray-50 transition-colors border border-gray-200">
+                                    Custom Events
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mb-6">
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Active Connections</h2>
                         <div class="grid grid-cols-1 gap-4">
@@ -140,7 +298,10 @@
                     <div>
                         <h2 class="text-lg font-semibold text-gray-900 mb-4">Available Catalogs</h2>
                         <div class="grid grid-cols-3 gap-4">
-                            <button onclick="selectCatalogSource('gcs')" class="bg-white rounded-lg border border-gray-200 p-4 hover:border-blue-500 hover:shadow-sm transition-all text-left">
+                            <button onclick="selectCatalogSource('gcs')" class="bg-white rounded-lg border border-gray-200 p-4 hover:border-blue-500 hover:shadow-sm transition-all text-left relative">
+                                <div class="absolute top-2 right-2">
+                                    <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">MCP Enhanced</span>
+                                </div>
                                 <div class="flex items-start">
                                     <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
                                         <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
@@ -215,17 +376,44 @@
 
                     <!-- Step 1: Configure GCS Connection -->
                     <div id="step1-content" class="bg-white rounded-lg border border-gray-200 p-6">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Configure GCS Connection</h3>
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900">Configure GCS Connection</h3>
+                            <button onclick="mcpAutoFillStep1()" class="px-3 py-1.5 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition-colors flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                Auto-Detect Config
+                            </button>
+                        </div>
                         
                         <div class="max-w-2xl">
+                            <!-- MCP Detection Alert -->
+                            <div id="mcpDetectionAlert" class="hidden mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <div class="flex items-start">
+                                    <svg class="h-5 w-5 text-green-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <div class="flex-1">
+                                        <p class="text-sm font-medium text-green-900">MCP Auto-Detection Complete</p>
+                                        <p class="text-xs text-green-700 mt-1">Found 3 GCS buckets in project. Configuration auto-filled based on detected structure.</p>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Connection Name -->
-                            <div class="mb-6">
+                            <div class="mb-6 relative">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
                                     Name <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" id="connectionName" value="Publisher Event Data" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" 
-                                    placeholder="e.g., Publisher Event Data">
+                                <div class="relative">
+                                    <input type="text" id="connectionName" value="" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" 
+                                        placeholder="e.g., Publisher Event Data"
+                                        onkeyup="mcpSuggestName(this)">
+                                    <div id="nameSuggestion" class="hidden absolute right-2 top-2">
+                                        <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">✓ Valid</span>
+                                    </div>
+                                </div>
                                 <p class="mt-1 text-xs text-gray-500">Friendly name for this connection in Permutive</p>
                             </div>
 
@@ -234,9 +422,14 @@
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
                                     GCP Project ID <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" id="gcpProjectId" value="publisher-data-platform" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" 
-                                    placeholder="your-project-id">
+                                <div class="relative">
+                                    <input type="text" id="gcpProjectId" value="" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" 
+                                        placeholder="your-project-id">
+                                    <button onclick="mcpDetectProject()" class="absolute right-2 top-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded hover:bg-blue-200">
+                                        Detect
+                                    </button>
+                                </div>
                                 <p class="mt-1 text-xs text-gray-500">The GCP project that the bucket belongs to</p>
                             </div>
 
@@ -246,7 +439,8 @@
                                     GCS Bucket Region <span class="text-red-500">*</span>
                                 </label>
                                 <select id="bucketRegion" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                                    <option value="us-central1" selected>us-central1</option>
+                                    <option value="">Select region...</option>
+                                    <option value="us-central1">us-central1</option>
                                     <option value="us-east1">us-east1</option>
                                     <option value="us-west1">us-west1</option>
                                     <option value="europe-west1">europe-west1</option>
@@ -257,28 +451,47 @@
                                 <p class="mt-1 text-xs text-gray-500">Must match your Permutive workspace location</p>
                             </div>
 
-                            <!-- Bucket Name -->
+                            <!-- Bucket Name with Auto-complete -->
                             <div class="mb-6">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
                                     GCS Bucket Name <span class="text-red-500">*</span>
                                 </label>
                                 <div class="flex items-center">
                                     <span class="px-3 py-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-sm text-gray-600">gs://</span>
-                                    <input type="text" id="bucketName" value="publisher-analytics-data" 
+                                    <input type="text" id="bucketName" value="" 
                                         class="flex-1 px-3 py-2 border border-gray-300 rounded-r-lg focus:ring-blue-500 focus:border-blue-500" 
-                                        placeholder="your-bucket-name">
+                                        placeholder="your-bucket-name"
+                                        onfocus="showBucketSuggestions()">
+                                </div>
+                                <div id="bucketSuggestions" class="hidden mt-2 p-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+                                    <p class="text-xs text-gray-500 mb-2">Detected buckets:</p>
+                                    <div class="space-y-1">
+                                        <button onclick="selectBucket('publisher-analytics-data')" class="w-full text-left px-2 py-1 text-sm hover:bg-gray-100 rounded">publisher-analytics-data</button>
+                                        <button onclick="selectBucket('web-events-export')" class="w-full text-left px-2 py-1 text-sm hover:bg-gray-100 rounded">web-events-export</button>
+                                        <button onclick="selectBucket('customer-data-platform')" class="w-full text-left px-2 py-1 text-sm hover:bg-gray-100 rounded">customer-data-platform</button>
+                                    </div>
                                 </div>
                                 <p class="mt-1 text-xs text-gray-500">The full name of the GCS bucket (no gs:// prefix)</p>
                             </div>
 
-                            <!-- Schema Prefix -->
+                            <!-- Schema Prefix with Smart Detection -->
                             <div class="mb-6">
                                 <label class="block text-sm font-medium text-gray-700 mb-2">
                                     Schema Prefix <span class="text-red-500">*</span>
                                 </label>
-                                <input type="text" id="schemaPrefix" value="event-data/production" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" 
-                                    placeholder="data/schema-name">
+                                <div class="relative">
+                                    <input type="text" id="schemaPrefix" value="" 
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" 
+                                        placeholder="data/schema-name">
+                                    <button onclick="mcpAnalyzeBucket()" class="absolute right-2 top-2 px-2 py-1 bg-green-100 text-green-700 text-xs rounded hover:bg-green-200">
+                                        Analyze Structure
+                                    </button>
+                                </div>
+                                <div id="schemaAnalysis" class="hidden mt-2 p-3 bg-blue-50 rounded-lg">
+                                    <p class="text-xs font-medium text-blue-900 mb-1">MCP Analysis:</p>
+                                    <p class="text-xs text-blue-700">Detected Hive-style partitioning in <code>event-data/production/</code></p>
+                                    <button onclick="applySchemaPrefix('event-data/production')" class="mt-2 text-xs text-blue-600 underline">Apply this prefix</button>
+                                </div>
                                 <p class="mt-1 text-xs text-gray-500">The prefix within the bucket representing a schema (no leading slash)</p>
                             </div>
 
@@ -289,10 +502,16 @@
                                         Data Format <span class="text-red-500">*</span>
                                     </label>
                                     <select id="dataFormat" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="parquet" selected>Parquet</option>
+                                        <option value="">Select format...</option>
+                                        <option value="parquet">Parquet</option>
                                         <option value="csv">CSV</option>
                                     </select>
-                                    <p class="mt-1 text-xs text-gray-500">Parquet recommended for performance</p>
+                                    <p class="mt-1 text-xs text-gray-500">Parquet recommended</p>
+                                    <div id="formatRecommendation" class="hidden mt-2 p-2 bg-green-50 rounded">
+                                        <p class="text-xs text-green-700">
+                                            <span class="font-medium">MCP:</span> Detected .parquet files with ZSTD compression
+                                        </p>
+                                    </div>
                                 </div>
 
                                 <!-- Data Partitioning -->
@@ -301,31 +520,39 @@
                                         Data Partitioning <span class="text-red-500">*</span>
                                     </label>
                                     <select id="dataPartitioning" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                                        <option value="all" selected>All tables are partitioned</option>
+                                        <option value="">Select...</option>
+                                        <option value="all">All tables are partitioned</option>
                                         <option value="none">No tables are partitioned</option>
                                     </select>
-                                    <p class="mt-1 text-xs text-gray-500">Hive-style partitioning support</p>
+                                    <p class="mt-1 text-xs text-gray-500">Hive-style partitioning</p>
                                 </div>
                             </div>
 
-                            <!-- Example Structure -->
-                            <div class="mb-6 bg-gray-50 rounded-lg p-4">
-                                <h4 class="text-sm font-medium text-gray-700 mb-3">Expected Directory Structure</h4>
-                                <div class="directory-tree text-xs text-gray-600 space-y-1">
-                                    <div>gs://publisher-analytics-data/</div>
-                                    <div class="ml-4">└── event-data/production/</div>
-                                    <div class="ml-8">├── user_events/</div>
-                                    <div class="ml-12">├── date=2025-01-01/</div>
-                                    <div class="ml-12">├── date=2025-01-02/</div>
-                                    <div class="ml-12">└── date=2025-01-03/</div>
-                                    <div class="ml-8">├── page_views/</div>
-                                    <div class="ml-12">└── date=2025-01-01/region=US/</div>
-                                    <div class="ml-8">└── user_profiles/</div>
-                                    <div class="ml-12">└── profiles.parquet</div>
+                            <!-- Real-time Validation -->
+                            <div id="configValidation" class="mb-6 p-4 bg-gray-50 rounded-lg">
+                                <h4 class="text-sm font-medium text-gray-700 mb-2">Configuration Status</h4>
+                                <div class="space-y-2" id="validationItems">
+                                    <div class="flex items-center text-xs">
+                                        <span class="w-4 h-4 rounded-full bg-gray-300 mr-2"></span>
+                                        <span class="text-gray-600">Connection name</span>
+                                    </div>
+                                    <div class="flex items-center text-xs">
+                                        <span class="w-4 h-4 rounded-full bg-gray-300 mr-2"></span>
+                                        <span class="text-gray-600">GCP project validation</span>
+                                    </div>
+                                    <div class="flex items-center text-xs">
+                                        <span class="w-4 h-4 rounded-full bg-gray-300 mr-2"></span>
+                                        <span class="text-gray-600">Bucket accessibility</span>
+                                    </div>
+                                    <div class="flex items-center text-xs">
+                                        <span class="w-4 h-4 rounded-full bg-gray-300 mr-2"></span>
+                                        <span class="text-gray-600">Schema structure</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="flex justify-end">
+                            <div class="flex justify-between">
+                                <button onclick="closeWizard()" class="px-4 py-2 text-gray-600 hover:text-gray-900">Cancel</button>
                                 <button onclick="goToStep(2)" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                                     Continue to Permissions
                                 </button>
@@ -335,7 +562,15 @@
 
                     <!-- Step 2: IAM Permissions -->
                     <div id="step2-content" class="bg-white rounded-lg border border-gray-200 p-6 hidden">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Configure IAM Permissions</h3>
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900">Configure IAM Permissions</h3>
+                            <button onclick="mcpGeneratePermissions()" class="px-3 py-1.5 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition-colors flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Auto-Configure
+                            </button>
+                        </div>
                         
                         <div class="max-w-2xl">
                             <!-- Service Account Info -->
@@ -351,23 +586,38 @@
                                 </div>
                             </div>
 
+                            <!-- One-Click Permission Setup -->
+                            <div id="mcpPermissionSetup" class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                <h4 class="text-sm font-medium text-green-900 mb-3">MCP Quick Setup</h4>
+                                <div class="space-y-3">
+                                    <button onclick="mcpGrantPermissions()" class="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Grant Permissions Automatically
+                                    </button>
+                                    <div class="text-xs text-green-700">
+                                        <p class="font-medium mb-1">Or run this command:</p>
+                                        <div class="bg-white p-2 rounded border border-green-300 font-mono text-xs break-all">
+                                            gcloud storage buckets add-iam-policy-binding gs://publisher-analytics-data --member="serviceAccount:connection@permutive.com" --role="roles/storage.objectViewer"
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Required Permissions -->
                             <div class="mb-6">
                                 <h4 class="text-sm font-medium text-gray-700 mb-3">Required IAM Roles</h4>
                                 <div class="space-y-3">
                                     <div class="flex items-start p-3 bg-white border border-gray-200 rounded-lg">
-                                        <svg class="h-5 w-5 text-green-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
+                                        <div id="perm1Status" class="w-5 h-5 rounded-full bg-yellow-400 mr-3 mt-0.5 animate-pulse"></div>
                                         <div class="flex-1">
                                             <code class="text-sm font-medium text-gray-900">roles/storage.objectViewer</code>
                                             <p class="text-xs text-gray-500 mt-1">Allows reading objects and their metadata</p>
                                         </div>
                                     </div>
                                     <div class="flex items-start p-3 bg-white border border-gray-200 rounded-lg">
-                                        <svg class="h-5 w-5 text-green-500 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
+                                        <div id="perm2Status" class="w-5 h-5 rounded-full bg-yellow-400 mr-3 mt-0.5 animate-pulse"></div>
                                         <div class="flex-1">
                                             <code class="text-sm font-medium text-gray-900">roles/storage.bucketViewer</code>
                                             <p class="text-xs text-gray-500 mt-1">Allows listing and getting bucket metadata</p>
@@ -376,34 +626,7 @@
                                 </div>
                             </div>
 
-                            <!-- Instructions -->
-                            <div class="mb-6 bg-gray-50 rounded-lg p-4">
-                                <h4 class="text-sm font-medium text-gray-700 mb-3">How to Grant Access</h4>
-                                <ol class="space-y-2 text-sm text-gray-600">
-                                    <li class="flex">
-                                        <span class="font-medium mr-2">1.</span>
-                                        <span>Go to the <a href="https://console.cloud.google.com/storage/browser" target="_blank" class="text-blue-600 hover:underline">GCS Console</a></span>
-                                    </li>
-                                    <li class="flex">
-                                        <span class="font-medium mr-2">2.</span>
-                                        <span>Select your bucket: <code>publisher-analytics-data</code></span>
-                                    </li>
-                                    <li class="flex">
-                                        <span class="font-medium mr-2">3.</span>
-                                        <span>Click "Permissions" tab</span>
-                                    </li>
-                                    <li class="flex">
-                                        <span class="font-medium mr-2">4.</span>
-                                        <span>Click "Grant Access"</span>
-                                    </li>
-                                    <li class="flex">
-                                        <span class="font-medium mr-2">5.</span>
-                                        <span>Add <code>connection@permutive.com</code> with the roles above</span>
-                                    </li>
-                                </ol>
-                            </div>
-
-                            <!-- Verification -->
+                            <!-- Real-time Verification -->
                             <div class="mb-6">
                                 <button onclick="verifyPermissions()" class="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center">
                                     <svg class="h-5 w-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -412,6 +635,18 @@
                                     Verify Permissions
                                 </button>
                                 <div id="verifyResult" class="hidden mt-3"></div>
+                            </div>
+
+                            <!-- Troubleshooting -->
+                            <div id="permissionTroubleshooting" class="hidden mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                                <h4 class="text-sm font-medium text-amber-900 mb-2">MCP Detected Issues</h4>
+                                <div class="text-xs text-amber-700 space-y-1">
+                                    <p>• Service account missing bucket viewer role</p>
+                                    <p>• Bucket has restrictive organization policies</p>
+                                </div>
+                                <button onclick="mcpFixPermissions()" class="mt-2 px-3 py-1 bg-amber-600 text-white text-xs rounded hover:bg-amber-700">
+                                    Auto-Fix Issues
+                                </button>
                             </div>
 
                             <div class="flex justify-between">
@@ -423,9 +658,17 @@
                         </div>
                     </div>
 
-                    <!-- Step 3: Create Import -->
+                    <!-- Step 3: Create Import with Intelligent Mapping -->
                     <div id="step3-content" class="bg-white rounded-lg border border-gray-200 p-6 hidden">
-                        <h3 class="text-lg font-semibold text-gray-900 mb-6">Create Import</h3>
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-semibold text-gray-900">Create Import</h3>
+                            <button onclick="mcpAutoMapSchema()" class="px-3 py-1.5 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition-colors flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                </svg>
+                                Auto-Map Schema
+                            </button>
+                        </div>
                         
                         <div class="max-w-3xl">
                             <!-- Connection Summary -->
@@ -442,12 +685,23 @@
                                 </div>
                             </div>
 
-                            <!-- Discovered Tables -->
+                            <!-- MCP Schema Analysis -->
+                            <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+                                <h4 class="text-sm font-medium text-blue-900 mb-2">MCP Schema Analysis</h4>
+                                <div class="text-xs text-blue-700 space-y-1">
+                                    <p>✓ Detected 3 tables with compatible structure</p>
+                                    <p>✓ Found user_id column matching Permutive requirements</p>
+                                    <p>✓ Timestamp columns identified for event ordering</p>
+                                    <p>✓ Segment data compatible with Permutive cohorts</p>
+                                </div>
+                            </div>
+
+                            <!-- Discovered Tables with Smart Mapping -->
                             <div class="mb-6">
                                 <h4 class="text-sm font-medium text-gray-700 mb-3">Discovered Tables</h4>
                                 <div class="space-y-3" id="discoveredTables">
                                     <!-- User Events Table -->
-                                    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition-all" onclick="selectTable('user_events')">
+                                    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition-all">
                                         <div class="flex items-start justify-between">
                                             <div class="flex-1">
                                                 <div class="flex items-center">
@@ -457,72 +711,119 @@
                                                         <p class="text-xs text-gray-500 mt-1">Partitioned by: date (Hive-style)</p>
                                                     </div>
                                                 </div>
+                                                
+                                                <!-- Column Mapping -->
                                                 <div class="mt-3 pl-7">
-                                                    <p class="text-xs text-gray-600 mb-2">Detected schema:</p>
-                                                    <div class="flex flex-wrap gap-1">
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">user_id: STRING</span>
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">timestamp: TIMESTAMP</span>
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">event_type: STRING</span>
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">page_url: STRING</span>
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">session_id: STRING</span>
+                                                    <div class="flex items-center justify-between mb-2">
+                                                        <p class="text-xs text-gray-600">Column Mapping:</p>
+                                                        <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">95% Confidence</span>
+                                                    </div>
+                                                    <div class="space-y-2">
+                                                        <div class="flex items-center text-xs">
+                                                            <span class="w-32 text-gray-600">user_id</span>
+                                                            <span class="mx-2">→</span>
+                                                            <span class="font-medium text-blue-600">permutive_id</span>
+                                                            <span class="ml-2 w-3 h-3 rounded-full confidence-high"></span>
+                                                        </div>
+                                                        <div class="flex items-center text-xs">
+                                                            <span class="w-32 text-gray-600">timestamp</span>
+                                                            <span class="mx-2">→</span>
+                                                            <span class="font-medium text-blue-600">event_time</span>
+                                                            <span class="ml-2 w-3 h-3 rounded-full confidence-high"></span>
+                                                        </div>
+                                                        <div class="flex items-center text-xs">
+                                                            <span class="w-32 text-gray-600">event_type</span>
+                                                            <span class="mx-2">→</span>
+                                                            <span class="font-medium text-blue-600">event_name</span>
+                                                            <span class="ml-2 w-3 h-3 rounded-full confidence-medium"></span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="ml-4">
-                                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">Recommended</span>
+                                            <div class="ml-4 flex flex-col space-y-1">
+                                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">User Activity</span>
+                                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Auto-Mapped</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- Page Views Table -->
-                                    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition-all" onclick="selectTable('page_views')">
+                                    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition-all">
                                         <div class="flex items-start justify-between">
                                             <div class="flex-1">
                                                 <div class="flex items-center">
                                                     <input type="checkbox" id="table-page_views" class="mr-3" checked>
                                                     <div>
                                                         <p class="font-medium text-gray-900">page_views</p>
-                                                        <p class="text-xs text-gray-500 mt-1">Partitioned by: date, region (Multi-level Hive)</p>
+                                                        <p class="text-xs text-gray-500 mt-1">Partitioned by: date, region (Multi-level)</p>
                                                     </div>
                                                 </div>
-                                                <div class="mt-3 pl-7">
-                                                    <p class="text-xs text-gray-600 mb-2">Detected schema:</p>
-                                                    <div class="flex flex-wrap gap-1">
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">visitor_id: STRING</span>
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">page_path: STRING</span>
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">referrer: STRING</span>
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">duration_seconds: INTEGER</span>
-                                                    </div>
+                                                
+                                                <!-- MCP Suggestion -->
+                                                <div class="mt-3 pl-7 p-2 bg-amber-50 rounded">
+                                                    <p class="text-xs font-medium text-amber-900">MCP Suggestion:</p>
+                                                    <p class="text-xs text-amber-700">Consider renaming 'visitor_id' to match 'user_id' for consistency</p>
+                                                    <button onclick="applyMCPSuggestion('page_views')" class="mt-1 text-xs text-amber-600 underline">Apply suggestion</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
                                     <!-- User Profiles Table -->
-                                    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition-all" onclick="selectTable('user_profiles')">
+                                    <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition-all">
                                         <div class="flex items-start justify-between">
                                             <div class="flex-1">
                                                 <div class="flex items-center">
                                                     <input type="checkbox" id="table-user_profiles" class="mr-3">
                                                     <div>
                                                         <p class="font-medium text-gray-900">user_profiles</p>
-                                                        <p class="text-xs text-gray-500 mt-1">Non-partitioned (Single file)</p>
+                                                        <p class="text-xs text-gray-500 mt-1">Non-partitioned (Profile data)</p>
                                                     </div>
                                                 </div>
+                                                
                                                 <div class="mt-3 pl-7">
-                                                    <p class="text-xs text-gray-600 mb-2">Detected schema:</p>
-                                                    <div class="flex flex-wrap gap-1">
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">user_id: STRING</span>
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">segments: ARRAY</span>
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">lifetime_value: FLOAT</span>
-                                                        <span class="px-2 py-0.5 bg-gray-100 text-xs rounded">last_seen: TIMESTAMP</span>
+                                                    <div class="flex items-center text-xs text-green-700">
+                                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                        </svg>
+                                                        Perfect match for Permutive user profiles
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="ml-4">
-                                                <span class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">Profile Data</span>
+                                                <span class="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">Profile Data</span>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Data Preview with Transformation -->
+                            <div class="mb-6">
+                                <button onclick="toggleDataPreview()" class="text-sm font-medium text-blue-600 hover:text-blue-700">
+                                    View Data Preview & Transformations →
+                                </button>
+                                <div id="dataPreview" class="hidden mt-3 p-4 bg-gray-50 rounded-lg">
+                                    <h5 class="text-xs font-medium text-gray-700 mb-2">Sample Data After MCP Transformation:</h5>
+                                    <div class="overflow-x-auto">
+                                        <table class="text-xs w-full">
+                                            <thead>
+                                                <tr class="border-b">
+                                                    <th class="text-left py-1">permutive_id</th>
+                                                    <th class="text-left py-1">event_time</th>
+                                                    <th class="text-left py-1">event_name</th>
+                                                    <th class="text-left py-1">segments</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="border-b">
+                                                    <td class="py-1">user_123</td>
+                                                    <td class="py-1">2025-01-28T10:30:00Z</td>
+                                                    <td class="py-1">page_view</td>
+                                                    <td class="py-1">["sports", "premium"]</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -532,12 +833,14 @@
                                 <h4 class="text-sm font-medium text-blue-900 mb-2">Import Configuration</h4>
                                 <div class="grid grid-cols-2 gap-4 text-xs text-blue-800">
                                     <div>
-                                        <p><span class="font-medium">Data Format:</span> Parquet (ZSTD compression)</p>
+                                        <p><span class="font-medium">Data Format:</span> Parquet (ZSTD)</p>
                                         <p><span class="font-medium">Partitioning:</span> Hive-style enabled</p>
+                                        <p><span class="font-medium">Validation:</span> Schema validated ✓</p>
                                     </div>
                                     <div>
                                         <p><span class="font-medium">Import Type:</span> User Activity</p>
                                         <p><span class="font-medium">Schedule:</span> Daily at 02:00 UTC</p>
+                                        <p><span class="font-medium">Estimated rows:</span> 15.2M</p>
                                     </div>
                                 </div>
                             </div>
@@ -548,7 +851,7 @@
                                     <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
                                     </svg>
-                                    Create Import
+                                    Create Import with MCP Mappings
                                 </button>
                             </div>
                         </div>
@@ -563,22 +866,34 @@
                                 </svg>
                             </div>
                             <h3 class="text-xl font-semibold text-gray-900 mb-2">Import Created Successfully!</h3>
-                            <p class="text-gray-600 mb-6">Your GCS connection has been established and imports are being processed.</p>
+                            <p class="text-gray-600 mb-6">Your GCS connection with MCP-optimized mappings is now active.</p>
                             
-                            <div class="bg-gray-50 rounded-lg p-4 mb-6 text-left max-w-md mx-auto">
-                                <h4 class="text-sm font-medium text-gray-900 mb-2">Next Steps:</h4>
+                            <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-4 mb-6 text-left max-w-md mx-auto border border-green-200">
+                                <h4 class="text-sm font-medium text-gray-900 mb-2">MCP Enhancements Applied:</h4>
                                 <ul class="text-sm text-gray-600 space-y-1">
                                     <li class="flex items-start">
-                                        <span class="mr-2">1.</span>
-                                        <span>Data will begin importing within the next 15 minutes</span>
+                                        <svg class="w-4 h-4 text-green-500 mr-1 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span>Auto-detected bucket structure and partitioning</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <span class="mr-2">2.</span>
-                                        <span>You can monitor progress in the Imports section</span>
+                                        <svg class="w-4 h-4 text-green-500 mr-1 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span>Configured permissions automatically</span>
                                     </li>
                                     <li class="flex items-start">
-                                        <span class="mr-2">3.</span>
-                                        <span>Configure cohorts once data is available</span>
+                                        <svg class="w-4 h-4 text-green-500 mr-1 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span>Mapped 12 columns with 95% confidence</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <svg class="w-4 h-4 text-green-500 mr-1 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                        </svg>
+                                        <span>Applied 3 data transformations</span>
                                     </li>
                                 </ul>
                             </div>
@@ -601,9 +916,303 @@
     <script>
         let currentStep = 1;
         let selectedTables = new Set(['user_events', 'page_views']);
+        let mcpEnabled = true;
 
+        // MCP Assistant Functions
+        function toggleMCPAssistant() {
+            mcpEnabled = !mcpEnabled;
+            const toggle = document.getElementById('mcpToggle');
+            const assistant = document.getElementById('mcpAssistant');
+            
+            if (mcpEnabled) {
+                toggle.classList.add('bg-green-500');
+                toggle.classList.remove('bg-gray-300');
+                toggle.querySelector('span').classList.add('translate-x-6');
+                toggle.querySelector('span').classList.remove('translate-x-1');
+                assistant.style.display = 'block';
+                updateMCPContent('MCP Assistant activated! Ready to help optimize your configuration.');
+            } else {
+                toggle.classList.remove('bg-green-500');
+                toggle.classList.add('bg-gray-300');
+                toggle.querySelector('span').classList.remove('translate-x-6');
+                toggle.querySelector('span').classList.add('translate-x-1');
+                assistant.style.display = 'none';
+            }
+        }
+
+        function toggleMCPPanel() {
+            const minimized = document.getElementById('mcpMinimized');
+            const expanded = document.getElementById('mcpExpanded');
+            
+            if (expanded.style.display === 'none') {
+                expanded.style.display = 'block';
+                minimized.style.display = 'none';
+            } else {
+                expanded.style.display = 'none';
+                minimized.style.display = 'block';
+            }
+        }
+
+        function updateMCPContent(message, isTyping = false) {
+            const content = document.getElementById('mcpContent');
+            if (isTyping) {
+                content.innerHTML = `
+                    <div class="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">MCP is analyzing...</p>
+                `;
+            } else {
+                content.innerHTML = `
+                    <div class="text-sm text-gray-700 mcp-suggestion">
+                        <p>${message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Template Functions
+        function useTemplate(type) {
+            const templates = {
+                'ga4': {
+                    name: 'GA4 BigQuery Export',
+                    projectId: 'analytics-bigquery-export',
+                    bucket: 'analytics-export-data',
+                    schemaPrefix: 'analytics_123456/events',
+                    format: 'parquet',
+                    partitioning: 'all'
+                },
+                'adobe': {
+                    name: 'Adobe Analytics Data Feed',
+                    projectId: 'adobe-analytics-platform',
+                    bucket: 'aa-data-feeds',
+                    schemaPrefix: 'datafeed/hourly',
+                    format: 'csv',
+                    partitioning: 'all'
+                },
+                'custom': {
+                    name: 'Custom Event Stream',
+                    projectId: 'event-streaming-platform',
+                    bucket: 'real-time-events',
+                    schemaPrefix: 'events/production',
+                    format: 'parquet',
+                    partitioning: 'all'
+                }
+            };
+
+            const template = templates[type];
+            selectCatalogSource('gcs');
+            
+            setTimeout(() => {
+                document.getElementById('connectionName').value = template.name;
+                document.getElementById('gcpProjectId').value = template.projectId;
+                document.getElementById('bucketName').value = template.bucket;
+                document.getElementById('schemaPrefix').value = template.schemaPrefix;
+                document.getElementById('dataFormat').value = template.format;
+                document.getElementById('dataPartitioning').value = template.partitioning;
+                
+                updateMCPContent(`Template "${template.name}" applied! All fields have been pre-configured based on common ${type.toUpperCase()} patterns.`);
+                validateAllFields();
+            }, 500);
+        }
+
+        // Auto-Detection Functions
+        function mcpAutoDetect() {
+            updateMCPContent('', true);
+            setTimeout(() => {
+                updateMCPContent('Detected 3 GCS buckets in your project. Click "Auto-Detect Config" in the form to apply settings.');
+                document.getElementById('mcpDetectionAlert').classList.remove('hidden');
+            }, 2000);
+        }
+
+        function mcpAutoFillStep1() {
+            // Simulate auto-detection
+            updateMCPContent('', true);
+            
+            setTimeout(() => {
+                document.getElementById('connectionName').value = 'Publisher Analytics Pipeline';
+                document.getElementById('gcpProjectId').value = 'publisher-data-platform';
+                document.getElementById('bucketRegion').value = 'us-central1';
+                document.getElementById('bucketName').value = 'publisher-analytics-data';
+                document.getElementById('schemaPrefix').value = 'event-data/production';
+                document.getElementById('dataFormat').value = 'parquet';
+                document.getElementById('dataPartitioning').value = 'all';
+                
+                document.getElementById('mcpDetectionAlert').classList.remove('hidden');
+                document.getElementById('formatRecommendation').classList.remove('hidden');
+                
+                updateMCPContent('Configuration auto-filled! Detected Parquet files with Hive-style partitioning in your bucket.');
+                validateAllFields();
+            }, 1500);
+        }
+
+        function mcpDetectProject() {
+            const input = document.getElementById('gcpProjectId');
+            input.value = 'publisher-data-platform';
+            updateMCPContent('Project ID detected from your GCP context.');
+        }
+
+        function showBucketSuggestions() {
+            if (mcpEnabled) {
+                document.getElementById('bucketSuggestions').classList.remove('hidden');
+            }
+        }
+
+        function selectBucket(bucketName) {
+            document.getElementById('bucketName').value = bucketName;
+            document.getElementById('bucketSuggestions').classList.add('hidden');
+            mcpAnalyzeBucket();
+        }
+
+        function mcpAnalyzeBucket() {
+            updateMCPContent('', true);
+            setTimeout(() => {
+                document.getElementById('schemaAnalysis').classList.remove('hidden');
+                updateMCPContent('Found 3 table directories with Hive-style partitioning. Recommended prefix: event-data/production/');
+            }, 1000);
+        }
+
+        function applySchemaPrefix(prefix) {
+            document.getElementById('schemaPrefix').value = prefix;
+            document.getElementById('schemaAnalysis').classList.add('hidden');
+        }
+
+        function mcpSuggestName(input) {
+            if (input.value.length > 3) {
+                document.getElementById('nameSuggestion').classList.remove('hidden');
+            }
+        }
+
+        // Permission Functions
+        function mcpGeneratePermissions() {
+            updateMCPContent('Generating IAM commands for your bucket...');
+            document.getElementById('mcpPermissionSetup').classList.remove('hidden');
+        }
+
+        function mcpGrantPermissions() {
+            updateMCPContent('', true);
+            setTimeout(() => {
+                document.getElementById('perm1Status').classList.remove('bg-yellow-400', 'animate-pulse');
+                document.getElementById('perm1Status').classList.add('bg-green-500');
+                document.getElementById('perm2Status').classList.remove('bg-yellow-400', 'animate-pulse');
+                document.getElementById('perm2Status').classList.add('bg-green-500');
+                
+                updateMCPContent('Permissions granted successfully! Service account now has read access to your bucket.');
+            }, 2000);
+        }
+
+        function verifyPermissions() {
+            const resultDiv = document.getElementById('verifyResult');
+            resultDiv.innerHTML = `
+                <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 text-yellow-600 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        <span class="text-sm text-yellow-800">Verifying permissions...</span>
+                    </div>
+                </div>
+            `;
+            resultDiv.classList.remove('hidden');
+
+            setTimeout(() => {
+                const hasIssues = Math.random() > 0.7;
+                if (hasIssues && mcpEnabled) {
+                    document.getElementById('permissionTroubleshooting').classList.remove('hidden');
+                    resultDiv.innerHTML = `
+                        <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                            <div class="flex items-center">
+                                <svg class="h-5 w-5 text-amber-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                                </svg>
+                                <span class="text-sm text-amber-800">Permission issues detected. MCP can fix these automatically.</span>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <div class="flex items-center">
+                                <svg class="h-5 w-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span class="text-sm text-green-800">Permissions verified successfully!</span>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('perm1Status').classList.remove('bg-yellow-400', 'animate-pulse');
+                    document.getElementById('perm1Status').classList.add('bg-green-500');
+                    document.getElementById('perm2Status').classList.remove('bg-yellow-400', 'animate-pulse');
+                    document.getElementById('perm2Status').classList.add('bg-green-500');
+                }
+            }, 2000);
+        }
+
+        function mcpFixPermissions() {
+            updateMCPContent('', true);
+            setTimeout(() => {
+                document.getElementById('permissionTroubleshooting').classList.add('hidden');
+                document.getElementById('perm1Status').classList.remove('bg-yellow-400');
+                document.getElementById('perm1Status').classList.add('bg-green-500');
+                document.getElementById('perm2Status').classList.remove('bg-yellow-400');
+                document.getElementById('perm2Status').classList.add('bg-green-500');
+                updateMCPContent('Permission issues resolved! Applied organization policy exceptions for Permutive service account.');
+            }, 1500);
+        }
+
+        // Schema Mapping Functions
+        function mcpAutoMapSchema() {
+            updateMCPContent('', true);
+            setTimeout(() => {
+                updateMCPContent('Schema mapping complete! Matched 12 columns with Permutive\'s expected format. 3 transformations will be applied during import.');
+                // Update UI to show mapped columns
+            }, 2000);
+        }
+
+        function applyMCPSuggestion(table) {
+            updateMCPContent(`Applied suggestion for ${table}. Column names standardized.`);
+        }
+
+        function toggleDataPreview() {
+            const preview = document.getElementById('dataPreview');
+            preview.classList.toggle('hidden');
+        }
+
+        // Validation Functions
+        function validateAllFields() {
+            if (!mcpEnabled) return;
+            
+            const validationItems = document.getElementById('validationItems');
+            const fields = ['connectionName', 'gcpProjectId', 'bucketName', 'schemaPrefix'];
+            const statuses = ['Connection name', 'GCP project validation', 'Bucket accessibility', 'Schema structure'];
+            
+            let html = '';
+            fields.forEach((field, index) => {
+                const value = document.getElementById(field)?.value;
+                const isValid = value && value.length > 0;
+                const color = isValid ? 'bg-green-500' : 'bg-gray-300';
+                html += `
+                    <div class="flex items-center text-xs">
+                        <span class="w-4 h-4 rounded-full ${color} mr-2"></span>
+                        <span class="text-gray-600">${statuses[index]} ${isValid ? '✓' : ''}</span>
+                    </div>
+                `;
+            });
+            validationItems.innerHTML = html;
+        }
+
+        function mcpValidateAll() {
+            updateMCPContent('', true);
+            setTimeout(() => {
+                validateAllFields();
+                updateMCPContent('Validation complete! All configuration fields are properly set. Ready to proceed.');
+            }, 1500);
+        }
+
+        // Navigation Functions
         function openNewConnection() {
-            // This would open a modal or navigate to connection creation
             alert('Opening connection wizard...');
         }
 
@@ -613,6 +1222,10 @@
                 document.getElementById('gcsWizard').classList.remove('hidden');
                 currentStep = 1;
                 updateStepIndicators();
+                
+                if (mcpEnabled) {
+                    updateMCPContent('GCS connection selected. I\'ll help you configure it optimally. Click "Auto-Detect Config" to start.');
+                }
             }
         }
 
@@ -627,6 +1240,15 @@
             
             currentStep = step;
             updateStepIndicators();
+            
+            if (mcpEnabled) {
+                const messages = {
+                    1: 'Let me help you configure your GCS connection. I can auto-detect your buckets and suggest optimal settings.',
+                    2: 'Time to set up permissions. I can generate the exact commands or configure them automatically.',
+                    3: 'Final step! I\'ll map your schema to Permutive\'s format and suggest any necessary transformations.'
+                };
+                updateMCPContent(messages[step]);
+            }
         }
 
         function updateStepIndicators() {
@@ -654,34 +1276,6 @@
             }
         }
 
-        function verifyPermissions() {
-            const resultDiv = document.getElementById('verifyResult');
-            resultDiv.innerHTML = `
-                <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <div class="flex items-center">
-                        <svg class="h-5 w-5 text-yellow-600 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                        </svg>
-                        <span class="text-sm text-yellow-800">Verifying permissions...</span>
-                    </div>
-                </div>
-            `;
-            resultDiv.classList.remove('hidden');
-
-            setTimeout(() => {
-                resultDiv.innerHTML = `
-                    <div class="p-3 bg-green-50 border border-green-200 rounded-lg">
-                        <div class="flex items-center">
-                            <svg class="h-5 w-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <span class="text-sm text-green-800">Permissions verified successfully!</span>
-                        </div>
-                    </div>
-                `;
-            }, 2000);
-        }
-
         function selectTable(tableName) {
             const checkbox = document.getElementById(`table-${tableName}`);
             checkbox.checked = !checkbox.checked;
@@ -706,11 +1300,14 @@
             setTimeout(() => {
                 document.getElementById('gcsWizard').classList.add('hidden');
                 document.getElementById('successView').classList.remove('hidden');
+                
+                if (mcpEnabled) {
+                    updateMCPContent('Import created successfully! MCP will continue monitoring for schema changes and optimization opportunities.');
+                }
             }, 2000);
         }
 
         function viewImports() {
-            // Navigate to imports page
             alert('Navigating to Imports page...');
         }
 
@@ -719,6 +1316,17 @@
             document.getElementById('connectionsView').classList.remove('hidden');
             currentStep = 1;
         }
+
+        function closeWizard() {
+            document.getElementById('gcsWizard').classList.add('hidden');
+            document.getElementById('connectionsView').classList.remove('hidden');
+        }
+
+        // Initialize MCP on load
+        window.onload = function() {
+            // Show MCP minimized initially
+            toggleMCPPanel();
+        };
     </script>
 </body>
 </html>
