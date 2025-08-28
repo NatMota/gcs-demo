@@ -3,8 +3,8 @@ const nextConfig = {
   reactStrictMode: true,
   // Uncommented for production deployment
   output: 'export',
-  basePath: '/gcs-demo',
-  assetPrefix: '/gcs-demo/',
+  basePath: '/permutive-gcs-demo',
+  assetPrefix: '/permutive-gcs-demo/',
   images: {
     unoptimized: true
   }
