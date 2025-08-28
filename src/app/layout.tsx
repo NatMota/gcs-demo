@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Permutive GCS Connectivity Demo',
-  description: 'Demo application for Google Cloud Storage connectivity automation',
+  title: 'GCS Demo',
+  description: 'Google Cloud Storage connectivity automation demo',
 }
 
 export default function RootLayout({
